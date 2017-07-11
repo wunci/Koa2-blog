@@ -1,13 +1,13 @@
 # Koa2-blog
 node+koa2+mysql
 ```
-创建数据库 博客使用navicat建表
+创建数据库 博客使用[navicat](https://www.navicat.com.cn/)建表
 ```
 
 * database: nodesql
 
  | users   | posts    |  comment  |
-| --------   | -----:   | :----: |
+| -------- | -----:   | :----: |
 | id        | id      |   id    |
 | name        | name      |   name    |
 | pass        | title      |   content    |
@@ -28,7 +28,10 @@ node+koa2+mysql
 * postid：文章id
 
 ```
-cnpm i && cnpm i supervisor
+ git clone https://github.com/wclimb/Koa2-blog.git
+ cd Koa2-blog
+ cnpm i supervisor
+ cnpm i 
 ```
 ```
 supervisor --harmony index
