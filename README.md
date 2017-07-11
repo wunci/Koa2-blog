@@ -1,7 +1,8 @@
 # Koa2-blog
 node+koa2+mysql
-
-> 1、创建数据库 博客使用navicat建表
+```
+创建数据库 博客使用navicat建表
+```
 
 * database: nodesql
 
@@ -26,9 +27,11 @@ node+koa2+mysql
 * pv：文章浏览数
 * postid：文章id
 
-> 2、cnpm i && cnpm i supervisor
-
-> 3、supervisor --harmony index
-
+```
+cnpm i && cnpm i supervisor
+```
+```
+supervisor --harmony index
+```
 
 
