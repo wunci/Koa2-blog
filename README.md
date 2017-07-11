@@ -39,28 +39,28 @@ supervisor --harmony index
 ```
 
 
-> 注册
+### 注册
 
 ![](http://oswpupqu5.bkt.clouddn.com/signup.png)
 
-> 登陆
+### 登陆
 
 ![](http://oswpupqu5.bkt.clouddn.com/signin.png)
 
-> 发表文章
+### 发表文章
 
 ![](http://oswpupqu5.bkt.clouddn.com/create.png)
 
-> 文章详情
+### 文章详情
 
 ![](http://oswpupqu5.bkt.clouddn.com/postcontent.png)
 
-> 文章列表
+### 文章列表
 
 ![](http://oswpupqu5.bkt.clouddn.com/posts.png)
 
-> 个人文章页以及正常编辑删除文章和评论
+### 个人文章页以及正常编辑删除文章和评论
 
-> 演示
+### 演示
 
 ![](http://oswpupqu5.bkt.clouddn.com/blog.gif)
