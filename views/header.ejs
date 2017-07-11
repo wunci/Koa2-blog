@@ -8,7 +8,15 @@
 	<link rel="stylesheet" href="/index.css">
 	<script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<header>
-		<div class="user_name">user： <%= session.user %></div>
+		<div class="user_name">
+			user：
+			<% if(session.user){ %>
+				 <%= session.user %>
+			<% } %>
+			<% if(!session.user){ %>
+				未登录
+			<% } %>
+		</div>
 		<div class="message">
 			<div class="error"></div>
 			<div class="success"></div>
@@ -23,6 +31,7 @@
 			<% } %>
 			<% if(!session.user){ %>
 				<div class="none_user">
+					<a href="/posts">全部文章</a>
 					<a  href="/signup">注册</a>
 					<a href="/signin">登录</a>
 				</div>

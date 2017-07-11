@@ -26,7 +26,7 @@ router.get('/posts',async (ctx,next)=>{
 				res=JSON.parse(JSON.stringify(result)) 
 				console.log('post',res)
 			})
-		console.log("'res['id']'",res[0]['id'])
+		// console.log("'res['id']'",res[0]['id'])
 		// await userModel.findCommentLength(res[1]['id'])
 		// 	.then(result=>{
 		// 		console.log('评论数',result)

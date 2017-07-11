@@ -33,6 +33,8 @@ cnpm i && cnpm i supervisor
 ```
 supervisor --harmony index
 ```
+
+
 > 注册
 
 ![](http://oswpupqu5.bkt.clouddn.com/signup.png)
@@ -54,3 +56,7 @@ supervisor --harmony index
 ![](http://oswpupqu5.bkt.clouddn.com/posts.png)
 
 > 个人文章页以及正常编辑删除文章和评论
+
+> 演示
+
+![](http://oswpupqu5.bkt.clouddn.com/blog.gif)
