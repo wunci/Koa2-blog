@@ -1,0 +1,45 @@
+<% include header %>
+<div class="container">
+	
+	<form class="form create" method="post">
+		<div>
+			<label>标题：</label>
+			<input placeholder="标题" type="text" name="title" value="<%= posts[0]['title'] %>">
+		</div>
+		<div>
+			<label>内容：</label>
+			<textarea name="content" id="" cols="42" rows="10">
+				<%= posts[0]['content'] %>
+			</textarea>
+		</div>
+		<!-- <input type="submit" value="修改"> -->
+		<div class="submit">修改</div>
+	</form>
+</div>
+<script>
+	$('.submit').click(()=>{
+		$.ajax({
+            url: document.URL,
+            data: $('.form').serialize(),
+            type: "POST",
+            cache: false,
+            dataType: 'json',
+            success: function (msg) {
+               if (msg) {
+               		$('.success').text('修改成功')
+               		fade('.success')
+               		setTimeout(()=>{
+	               		window.location.href="/posts"
+               		},1000)
+               }
+
+            },
+            error: function () {
+                alert('异常');
+
+            }
+        })
+		
+	})
+</script>
+<% include footer %>

@@ -1,0 +1,125 @@
+<% include header %>
+		
+			<div class="spost">
+				<p class="spost_user">author: <a href="/posts?author=<%= posts[0]['name'] %>"><%= posts[0]['name'] %></a></p>
+				
+				<div class="post_title">
+					<h3>title</h3>
+					<p><a href="/posts/<%= posts[0]['id'] %>"><%= posts[0]['title'] %></a></p>
+				</div>
+				<div class="post_content">
+					<h3>content</h3>
+					<p><%= posts[0]['content'] %></p>
+				</div>
+				<div class="edit">
+					<% if(session && session.user===  posts[0]['name']  ){ %>
+					<p><a href="<%= posts[0]['id'] %>/edit">编辑</a></p>
+					<p><a class="delete_post" >删除</a></p>
+					<% } %>
+					<script>
+						$('.delete_post').click(()=>{
+							$.ajax({
+								url:"<%= posts[0]['id'] %>/remove",
+								type:'GET',
+								cache: false,
+								success:function(msg){
+									if (msg.data==1) {
+										$('.success').text('删除文章成功')
+		               					fade('.success')
+		               					setTimeout(()=>{
+							               		window.location.href="/posts"	
+		               					},1000)
+									}else if(msg.data==2){
+										$('.error').text('删除文章失败')
+		               					fade('.error');
+		               					setTimeout(()=>{
+			               					window.location.reload()
+		               					},1000)
+									}
+								}
+							})
+						})
+					</script>
+				</div>
+			</div>
+			<div class="comment_wrap">
+				<h3>comment</h3>
+				<div class="comment_list">
+					<% comments.forEach(function(res){ %>
+						<div class="cmt_lists">
+							<p></p>
+							<p class="cmt_content">
+								content: <%= res['content'] %>
+								<span class="cmt_name">
+									By: <%= res['name'] %>
+									<% if(session && session.user ===  res['name']  ){ %>
+										<a class="delete_comment"> 删除</a>
+									<% } %>
+								</span>
+							</p>
+						</div>
+						<script>
+							$('.delete_comment').click(()=>{
+								$.ajax({
+									url:"<%= posts[0]['id'] %>/comment/<%= res['id'] %>/remove",
+									type:'GET',
+									cache: false,
+									success:function(msg){
+										if (msg.data==1) {
+											$('.success').text('删除留言成功')
+			               					fade('.success')
+			               					setTimeout(()=>{
+				               					window.location.reload()
+			               					},1000)
+										}else if(msg.data==2){
+											$('.error').text('删除留言失败')
+			               					fade('.error');
+			               					setTimeout(()=>{
+				               					window.location.reload()
+			               					},1000)
+										}
+									},
+									error:function(){
+										alert('异常')
+									}
+								})
+							})
+						</script>
+					<% }) %>
+				</div>	
+
+				<% if(session.user){ %>
+				<form class="form" method="post" action="/<%= posts[0]['id'] %>">
+					<textarea name="content" id=""></textarea>
+					<div class="submit">发表留言</div>
+				</form>
+				<% } %>
+
+			</div>
+
+			<script>
+				$('.submit').click(function(){
+					$.ajax({
+			            url: '/'+document.URL.slice(document.URL.lastIndexOf('/')+1),
+			            data:$('.form').serialize(),
+			            type: "POST",
+			            cache: false,
+			            dataType: 'json',
+			            success: function (msg) {
+			               if (msg) {
+			               		$('.success').text('发表留言成功')
+			               		fade('.success')
+			               		setTimeout(()=>{
+				               		window.location.reload()
+			               		},1000)  	
+			               }
+			            },
+			            error: function () {
+			                alert('异常');
+			            }
+			        })
+				})
+			</script>
+		
+	
+<% include footer %>

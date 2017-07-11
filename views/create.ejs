@@ -1,0 +1,40 @@
+<% include header %>
+<div class="container">
+	
+	<form method="post" class="form create">
+		<div>
+			<label>标题：</label>
+			<input placeholder="" type="text" name="title">
+		</div>
+		<div>
+			<label>内容：</label>
+			<textarea name="content" id="" cols="42" rows="10"></textarea>
+		</div>
+		<div class="submit">发表</div>
+	</form>
+</div>
+<script>
+	$('.submit').click(()=>{
+		$.ajax({
+            url: "/create",
+            data: $('.form').serialize(),
+            type: "POST",
+            cache: false,
+            dataType: 'json',
+            success: function (msg) {
+               if (msg) {
+               		$('.success').text('发表成功')
+               		fade('.success')
+               		setTimeout(()=>{
+	               		window.location.href="/posts"
+               		},1000)
+               }
+            },
+            error: function () {
+                alert('异常');
+
+            }
+        })			
+	})
+</script>
+<% include footer %>

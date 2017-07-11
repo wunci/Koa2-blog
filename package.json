@@ -1,0 +1,28 @@
+{
+  "name": "koa2-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config-lite": "^2.0.0",
+    "ejs": "^2.5.6",
+    "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-mysql-session": "^0.0.2",
+    "koa-router": "^7.2.1",
+    "koa-session-minimal": "^3.0.4",
+    "koa-static": "^4.0.0",
+    "koa-views": "^6.0.2",
+    "md5": "^2.2.1",
+    "moment": "^2.18.1",
+    "mysql": "^2.13.0",
+  }
+}

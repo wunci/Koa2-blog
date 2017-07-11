@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>koa-blog</title>
+</head>
+<body>
+	<link rel="stylesheet" href="/index.css">
+	<script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<header>
+		<div class="user_name">user： <%= session.user %></div>
+		<div class="message">
+			<div class="error"></div>
+			<div class="success"></div>
+		</div>
+		<div class="user_right">
+			<%  if(session.user){ %>
+				<div class="has_user">
+					<a href="/posts">全部文章</a>
+					<a href="/create">发表文章</a>
+					<span class="signout">登出</span>
+				</div>
+			<% } %>
+			<% if(!session.user){ %>
+				<div class="none_user">
+					<a  href="/signup">注册</a>
+					<a href="/signin">登录</a>
+				</div>
+			<% } %>
+		</div>
+	</header>
+
+	
+	<script>
+		function fade(data){
+			if ($(data).css('display')!=='none') {
+           		$(data).fadeOut(1500)
+       		}
+       		else{
+       			$(data).show()
+           		$(data).fadeOut(1500)
+       		}
+		}
+		$('.signout').click(()=>{
+			$.ajax({
+	            url: "/signout",
+	            type: "GET",
+	            cache: false,
+	            dataType: 'json',
+	            success: function (msg) {
+	               if (msg) {
+	               		$('.success').text('登出成功')
+	               		fade('.success')
+	               		setTimeout(()=>{
+		               		window.location.href="/posts"
+	               		},1000)
+	               	
+	               }
+	            },
+	            error: function () {
+	                alert('异常');
+	            }
+	        })
+		})
+	</script>
