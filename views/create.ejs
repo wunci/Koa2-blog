@@ -28,6 +28,12 @@
                		setTimeout(()=>{
 	               		window.location.href="/posts"
                		},1000)
+               }else{
+                  $('.success').text('发表失败')
+                  fade('.success')
+                  setTimeout(()=>{
+                    window.location.reload()
+                  },1000)
                }
             },
             error: function () {

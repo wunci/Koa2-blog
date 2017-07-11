@@ -1,11 +1,23 @@
 # Koa2-blog
 node+koa2+mysql
 
-创建数据库 博客使用[navicat](https://www.navicat.com.cn/)建表
+### 创建数据库 
+
+登录数据库
+```
+mysql -u root -p
+```
+创建数据库
+```
+create database nodesql;
+```
+使用创建的数据库
+```
+use nodesql
+```
 
 
-
-* database: nodesql
+> database: nodesql  tables: users posts comment  (已经在lib/mysql建表)
 
  | users   | posts    |  comment  |
 | -------- | -----:   | :----: |
