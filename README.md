@@ -13,7 +13,7 @@ create database nodesql;
 ```
 使用创建的数据库
 ```
-use nodesql
+use nodesql;
 ```
 
 
