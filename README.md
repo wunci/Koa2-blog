@@ -21,7 +21,6 @@ use nodesql;
 
 > database: nodesql  tables: users posts comment  (已经在lib/mysql建表)
 
-<<<<<<< HEAD
  | users   | posts    |  comment  |
 | :----: | :----:   | :----: |
 | id        | id      |   id    |
