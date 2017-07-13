@@ -1,6 +1,8 @@
 # Koa2-blog
 node+koa2+mysql
 
+教程 [Node+Koa2+Mysql 搭建简易博客](http://www.wclimb.site/2017/07/12/Node-Koa2-Mysql-%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E5%8D%9A%E5%AE%A2/) 
+
 ### 创建数据库 
 
 登录数据库
@@ -20,7 +22,7 @@ use nodesql;
 > database: nodesql  tables: users posts comment  (已经在lib/mysql建表)
 
  | users   | posts    |  comment  |
-| -------- | -----:   | :----: |
+| :----: | :----:   | :----: |
 | id        | id      |   id    |
 | name        | name      |   name    |
 | pass        | title      |   content    |
