@@ -27,13 +27,6 @@ use nodesql;
 | id        | id      |   id    |
 | name        | name      |   name    |
 | pass        | title      |   content    |
-=======
-| users   | posts    |  comment  |
-| :----: | :----:   | :----: |
-|   id    |   id    |   id    |
-|   name    |   name    |   name    |
-|   pass    |   title    |   content    |
->>>>>>> e2dd35b80f0f9e40598b347ccbc727a980f6cceb
 |         | content      |   postid    |
 |         | uid      |       |
 |         | moment      |       |
