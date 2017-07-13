@@ -51,7 +51,9 @@ use nodesql;
 ```
 supervisor --harmony index
 ```
+### 演示
 
+![](http://oswpupqu5.bkt.clouddn.com/blog.gif)
 
 ### 注册
 
@@ -75,6 +77,4 @@ supervisor --harmony index
 
 ### 个人文章页以及正常编辑删除文章和评论
 
-### 演示
 
-![](http://oswpupqu5.bkt.clouddn.com/blog.gif)
