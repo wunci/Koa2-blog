@@ -1,6 +1,5 @@
 <% include header %>
 <div class="container">
-	
 	<form class="form create" method="post">
 		<div>
 			<label>标题：</label>
@@ -12,7 +11,6 @@
 				<%= posts[0]['content'] %>
 			</textarea>
 		</div>
-		<!-- <input type="submit" value="修改"> -->
 		<div class="submit">修改</div>
 	</form>
 </div>
@@ -32,14 +30,12 @@
 	               		window.location.href="/posts"
                		},1000)
                }
-
             },
             error: function () {
                 alert('异常');
 
             }
-        })
-		
+        })		
 	})
 </script>
 <% include footer %>

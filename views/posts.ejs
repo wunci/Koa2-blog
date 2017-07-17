@@ -1,7 +1,5 @@
 <% include header %>
-
 	<ul class="posts">
-
 		<% posts.forEach(function(res){ %>
 			<li>
 				<div class="post_3">
@@ -23,7 +21,6 @@
 				<!-- <p>userid:<%= res['uid'] %></p> -->
 				<p class="post_time">发表时间：<%= res['moment'] %></p>
 			</li>
-		<% }) %>
-		
+		<% }) %>	
 	</ul>
 <% include footer %>

@@ -87,16 +87,13 @@
 						</script>
 					<% }) %>
 				</div>	
-
 				<% if(session.user){ %>
 				<form class="form" method="post" action="/<%= posts[0]['id'] %>">
 					<textarea name="content" id=""></textarea>
 					<div class="submit">发表留言</div>
 				</form>
 				<% } %>
-
 			</div>
-
 			<script>
 				$('.submit').click(function(){
 					$.ajax({

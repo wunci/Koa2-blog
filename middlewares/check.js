@@ -2,8 +2,7 @@
 module.exports ={
   
   checkNotLogin:function (ctx) {
-    if (ctx.session && ctx.session.user) {
-     
+    if (ctx.session && ctx.session.user) {     
       ctx.redirect('/posts');
       return false;
     }
@@ -11,8 +10,7 @@ module.exports ={
   },
 
   checkLogin:function (ctx) {
-    if (!ctx.session || !ctx.session.user) {
-      
+    if (!ctx.session || !ctx.session.user) {     
       ctx.redirect('/signin');
       return false;
     }

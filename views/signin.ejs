@@ -10,14 +10,11 @@
 				<input placeholder="密码" type="password" name="password">
 			</div>
 			<div class="submit">登录</div>
-		</form>
-		
+		</form>		
 	</div>
 	<script>
 		$('.submit').click(()=>{
-
 			console.log($('.form').serialize())
-
 			$.ajax({
 	            url: "/signin",
 	            data: $('.form').serialize(),
@@ -36,19 +33,14 @@
 	               		setTimeout(()=>{
 		               		window.location.href="/posts"
 
-	               		},1000)
-	               	
+	               		},1000)	               	
 	               }
-	              
-	                //console.log($('.ui.error.message').text);
 	            },
 	            error: function () {
 	                alert('异常');
 	            }
-	        })
-			
-		})
-		
+	        })			
+		})		
 	</script>
 <% include footer %>
 
