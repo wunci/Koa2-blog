@@ -21,7 +21,7 @@ router.post('/signup',async (ctx,next)=>{
 	}
 	await userModel.findDataByName(user.name)
 			.then(result=>{
-				// var res=JSON.parse(JSON.stringify(reslut))
+				
 				console.log(result)
 
 				if (result.length){
