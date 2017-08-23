@@ -58,7 +58,6 @@ header {
     margin-top: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    /*padding:  10px 20px;*/
     position: relative;
     padding-bottom: 50px;
 }
@@ -228,7 +227,7 @@ input {
 
 .delete_comment:hover,
 .delete_post:hover {
-    color: #f60;
+    color: #E87E38;
 }
 
 a:hover {
