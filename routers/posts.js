@@ -75,7 +75,6 @@ router.post('/create', async(ctx, next) => {
     var name = ctx.session.user
     var time = moment().format('YYYY-MM-DD HH:mm')
         //console.log([name, title, content, id, time])
-
     await userModel.insertPost([name, title, content, id, time])
         .then(() => {
             ctx.body = 'true'
@@ -96,7 +95,6 @@ router.post('/:postId', async(ctx, next) => {
         .then(result => {
             res_comments = parseInt(JSON.parse(JSON.stringify(result))[0]['comments'])
             res_comments += 1
-
         })
     await userModel.updatePostComment([res_comments, postId])
         .then(() => {
