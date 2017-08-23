@@ -1,181 +1,236 @@
-body,header,ul,li,p,div,html,span,h3,a{
-	margin: 0;
-	padding: 0;
-	color: #333;
-}
-body{
-	margin-bottom: 20px;
-}
-a{
-	text-decoration: none;
-}
-header{
-	width: 60%;
-	margin: 20px auto;
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: -o-flex;
-	display: flex;
-	justify-content: space-between;
-}
-.user_name{
-	font-size: 20px;
-}
-.has_user{
-	
-}
-.has_user a,.has_user span,.none_user a{
-	padding: 5px 15px;
-	
-	background: #5FB878;
-	
-	border-radius: 15px;
-	color: #fff;
-	cursor: pointer;
-}
-.posts{
-	list-style: none;
-	width: 60%;
-	margin: 0 auto;
-}
-.posts li{
-	margin-top: 10px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	/*padding:  10px 20px;*/
-	position: relative;
-	padding-bottom: 50px;
-}
-h3{
-	display: inline-block;
-	padding: 5px 10px;
-	background: #1E9FFF;
-	color: #fff;
-	border-radius: 10px;
-}
-.post_title p,.post_content p{
-	margin: 10px 0;
-	background: #eee;
-	padding: 10px 20px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-}
-.post_time{
-	position: absolute;
-	bottom: 5px;
-	right: 10px;
+body,
+header,
+ul,
+li,
+p,
+div,
+html,
+span,
+h3,
+a {
+    margin: 0;
+    padding: 0;
+    color: #333;
 }
 
-.post_3{
-	position: absolute;
-	bottom: 5px;
-	left: 10px;
-
-}
-.post_3 p{
-	display: inline-block;
-	margin-left: 5px;
-}
-.post_title{
-	padding: 10px 20px;
-
-}
-.post_content{
-	padding: 0 20px;
-	
+body {
+    margin-bottom: 20px;
 }
 
-.spost{
-	width: 60%;
-	margin:0 auto;
-	border: 1px solid #ddd;
-	position: relative;
-	padding-bottom: 40px;
+a {
+    text-decoration: none;
 }
-.spost_user{
-	position: absolute;
-	left: 20px;
-	bottom: 5px;
-}
-.edit{
-	position: absolute;
-	right: 20px;
-	bottom: 5px;
-}
-.edit p{
-	display: inline-block;
-	margin-left: 10px;	
-}
-.comment_wrap{
-	width: 60%;
-	margin:20px auto;	
-}
-.submit{
-	display: block;
-	width: 90px;
-	height: 35px;
-	line-height: 35px;
-	text-align: center;
-	border-radius: 10px;
-	background: #5FB878;
-	cursor: pointer;
-	color: #fff;
-	float: right;
-	margin-top: 20px;
-}
-.cmt_content{
-	background: #eee;
-	padding: 20px ;
-	position: relative;
-}
-.cmt_name{
-	position: absolute;
-	right: 20px;
-	bottom: 5px;
 
+header {
+    width: 60%;
+    margin: 20px auto;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    justify-content: space-between;
 }
-.cmt_name a{
-	margin-left: 10px;
+
+.user_name {
+    font-size: 20px;
 }
-.cmt_content{
-	margin-top: 10px;
+
+.has_user {}
+
+.has_user a,
+.has_user span,
+.none_user a {
+    padding: 5px 15px;
+    background: #5FB878;
+    border-radius: 15px;
+    color: #fff;
+    cursor: pointer;
 }
-.form{
-	margin:0 auto;
-	width: 50%;
-	margin-top: 20px;
+
+.posts {
+    list-style: none;
+    width: 60%;
+    margin: 0 auto;
 }
-textarea{
-	width: 100%;
-	height: 200px;
-	padding-left: 20px;
-	font-size: 20px;
+
+.posts li {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /*padding:  10px 20px;*/
+    position: relative;
+    padding-bottom: 50px;
 }
-.container{
-	width: 60%;
-	margin: 0 auto;
+
+h3 {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #1E9FFF;
+    color: #fff;
+    border-radius: 7px;
 }
-input{
-	display: block;
-	width: 100%;
-	height: 40px;
-	padding-left: 20px;
-	font-size: 20px;
+
+.post_title p,
+.post_content p {
+    margin: 10px 0;
+    background: #eee;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
-.create label{
-	display: block;
-	margin: 10px 0;
+
+.post_time {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
 }
-.comment_wrap form{
-	width: 100%;
+
+.post_3 {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
 }
-.delete_comment,.delete_post{
-	cursor: pointer;
+
+.post_3 p {
+    display: inline-block;
+    margin-left: 5px;
 }
-.delete_comment:hover,.delete_post:hover{
-	color: #f60;
+
+.post_title {
+    padding: 10px 20px;
 }
-a:hover{
-	color: #f60;
+
+.post_content {
+    padding: 0 20px;
+}
+
+.spost {
+    width: 60%;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.spost_user {
+    position: absolute;
+    left: 20px;
+    bottom: 5px;
+}
+
+.edit {
+    position: absolute;
+    right: 20px;
+    bottom: 5px;
+}
+
+.edit p {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.comment_wrap {
+    width: 60%;
+    margin: 20px auto;
+}
+
+.submit {
+    display: block;
+    width: 90px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border-radius: 10px;
+    background: #5FB878;
+    cursor: pointer;
+    color: #fff;
+    float: right;
+    margin-top: 20px;
+}
+
+.cmt_content {
+    background: #eee;
+    padding: 20px;
+    position: relative;
+    border-radius: 4px;
+    border-left: 3px solid #1E9FFF
+}
+
+.cmt_content:after {
+    content: '#content';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.cmt_name {
+    position: absolute;
+    right: 20px;
+    bottom: 5px;
+}
+
+.cmt_name a {
+    margin-left: 10px;
+}
+
+.cmt_content {
+    margin-top: 10px;
+}
+
+.form {
+    margin: 0 auto;
+    width: 50%;
+    margin-top: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    padding-left: 20px;
+    font-size: 20px;
+}
+
+.tips {
+    margin-top: 20px;
+    color: #ec5051;
+    text-align: center;
+}
+
+.container {
+    width: 60%;
+    margin: 0 auto;
+}
+
+input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    padding-left: 20px;
+    font-size: 20px;
+}
+
+.create label {
+    display: block;
+    margin: 10px 0;
+}
+
+.comment_wrap form {
+    width: 100%;
+}
+
+.delete_comment,
+.delete_post {
+    cursor: pointer;
+}
+
+.delete_comment:hover,
+.delete_post:hover {
+    color: #f60;
+}
+
+a:hover {
+    color: #f60;
 }

@@ -24,6 +24,7 @@
 		<div class="user_right">
 			<%  if(session.user){ %>
 				<div class="has_user">
+					<a target="__blank" href="https://github.com/wclimb/Koa2-blog">GitHub</a>
 					<a href="/posts">全部文章</a>
 					<a href="/create">发表文章</a>
 					<span class="signout">登出</span>
@@ -31,6 +32,7 @@
 			<% } %>
 			<% if(!session.user){ %>
 				<div class="none_user">
+					<a target="__blank" href="https://github.com/wclimb/Koa2-blog">GitHub</a>
 					<a href="/posts">全部文章</a>
 					<a  href="/signup">注册</a>
 					<a href="/signin">登录</a>
