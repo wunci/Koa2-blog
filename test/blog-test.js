@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var apiModel = require('../lib/mysql.js')
 
-describe('add adminUser', function() {
+describe('add User', function() {
 	// 创建一个用户
 	before(function(done) {
 		apiModel.insertData(['小明','123456']).then(()=>{
