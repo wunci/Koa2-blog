@@ -1,16 +1,17 @@
 {
   "name": "koa2-blog",
   "version": "1.0.0",
-  "description": "",
+  "description": "blog",
   "main": "index.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "supervisor --harmony index",
+    "test": "mocha --harmony test"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "wclimb",
+  "license": "MIT",
   "dependencies": {
     "config-lite": "^2.0.0",
     "ejs": "^2.5.6",
@@ -24,5 +25,9 @@
     "md5": "^2.2.1",
     "moment": "^2.18.1",
     "mysql": "^2.13.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
   }
 }

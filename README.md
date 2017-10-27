@@ -52,7 +52,10 @@ $ cnpm i supervisor
 $ cnpm i 
 ```
 ```
-$ supervisor --harmony index
+$ npm run dev(运行项目)
+```
+```
+$ npm test(测试项目)
 ```
 ### 演示
 
