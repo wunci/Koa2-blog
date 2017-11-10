@@ -26,7 +26,7 @@ router.get('/posts', async(ctx, next) => {
             .then(result => {
                 console.log(result)
                 res = JSON.parse(JSON.stringify(result))
-                    //console.log('post', res)
+                    console.log('post', res)
             })
 
         await ctx.render('posts', {
@@ -34,6 +34,16 @@ router.get('/posts', async(ctx, next) => {
             posts: res
         })
     }
+})
+
+// 滚动无限加载数据，每次输出5条
+router.post('/posts/page/:postId', async(ctx, next) => {
+
+     await userModel.findPageById(ctx.params.postId)
+            .then(result=>{
+                console.log(result)
+                 ctx.body = result   
+            })
 })
 
 // 单篇文章页
