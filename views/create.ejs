@@ -14,33 +14,41 @@
 	</form>
 </div>
 <script>
-	$('.submit').click(()=>{
-		$.ajax({
-            url: "/create",
-            data: $('.form').serialize(),
-            type: "POST",
-            cache: false,
-            dataType: 'json',
-            success: function (msg) {
-               if (msg) {
-               		$('.success').text('发表成功')
-               		fade('.success')
-               		setTimeout(()=>{
-	               		window.location.href="/posts"
-               		},1000)
-               }else{
-                  $('.success').text('发表失败')
-                  fade('.success')
-                  setTimeout(()=>{
-                    window.location.reload()
-                  },1000)
-               }
-            },
-            error: function () {
-                alert('异常');
-
-            }
-        })			
-	})
+    $('.submit').click(()=>{
+        if ($('input[name=title]').val().trim() == '') {
+            $('.error').text('请输入标题')
+            fade('.error')
+        }else if ($('textarea').val().trim() == '') {
+            $('.error').text('请输入内容')
+            fade('.error')
+        }else{          
+            $.ajax({
+                url: "/create",
+                data: $('.form').serialize(),
+                type: "POST",
+                cache: false,
+                dataType: 'json',
+                success: function (msg) {
+                if (msg) {
+                        $('.success').text('发表成功')
+                        fade('.success')
+                        setTimeout(()=>{
+                            window.location.href="/posts"
+                        },1000)
+                }else{
+                    $('.success').text('发表失败')
+                    fade('.success')
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },1000)
+                }
+                },
+                error: function () {
+                    alert('异常');
+    
+                }
+            })			
+        }   
+    })
 </script>
 <% include footer %>

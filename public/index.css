@@ -36,7 +36,6 @@ header {
     font-size: 20px;
 }
 
-.has_user {}
 
 .has_user a,
 .has_user span,
@@ -136,16 +135,16 @@ h3 {
 
 .submit {
     display: block;
-    width: 90px;
-    height: 35px;
-    line-height: 35px;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 4px;
     background: #5FB878;
     cursor: pointer;
     color: #fff;
-    float: right;
-    margin-top: 20px;
+    float: left;
+    margin-top: 20px ;
 }
 
 .cmt_content {
@@ -188,8 +187,15 @@ h3 {
 textarea {
     width: 100%;
     height: 200px;
-    padding-left: 20px;
+    padding:10px 0 0 20px;
     font-size: 20px;
+    border-radius: 4px;   
+	border: 1px solid #d7dde4;
+	-webkit-appearance: none;
+}
+
+textarea#spContent{
+    width: 98%;
 }
 
 .tips {
@@ -207,8 +213,21 @@ input {
     display: block;
     width: 100%;
     height: 40px;
-    padding-left: 20px;
     font-size: 20px;
+    padding: 6px 7px;	
+	border-radius: 4px;   
+	border: 1px solid #d7dde4;
+	-webkit-appearance: none;
+}
+
+input:focus,textarea:focus{
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(51,153,255,.2);
+    border-color: #5cadff;
+}
+
+input:hover,input:active,textarea:hover,textarea:active{
+    border-color: #5cadff;
 }
 
 .create label {
@@ -218,6 +237,7 @@ input {
 
 .comment_wrap form {
     width: 100%;
+    margin-bottom: 85px;
 }
 
 .delete_comment,
@@ -232,4 +252,11 @@ input {
 
 a:hover {
     color: #f60;
+}
+
+.error{
+    color: #ec5051;
+}
+.success{
+    color: #1E9FFF;
 }

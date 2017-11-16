@@ -1,17 +1,17 @@
 <% include header %>
 	<div class="spost">
-		<p class="spost_user">author: <a href="/posts?author=<%= posts[0]['name'] %>"><%= posts[0]['name'] %></a></p>
+		<p class="spost_user">author: <a href="/posts?author=<%= posts[0]['name'] %>"><%- posts[0]['name'] %></a></p>
 		
 		<div class="post_title">
 			<h3>title</h3>
-			<p><a href="/posts/<%= posts[0]['id'] %>"><%= posts[0]['title'] %></a></p>
+			<p><a href="/posts/<%= posts[0]['id'] %>"><%- posts[0]['title'] %></a></p>
 		</div>
 		<div class="post_content">
 			<h3>content</h3>
-			<p><%= posts[0]['content'] %></p>
+			<p><%- posts[0]['content'] %></p>
 		</div>
 		<div class="edit">
-			<% if(session && session.user===  posts[0]['name']  ){ %>
+			<% if(session && session.user ===  posts[0]['name']  ){ %>
 			<p><a href="<%= posts[0]['id'] %>/edit">编辑</a></p>
 			<p><a class="delete_post" >删除</a></p>
 			<% } %>
@@ -43,6 +43,14 @@
 	</div>
 	<div class="comment_wrap">
 		<h3>comment</h3>
+		<% if(session.user){ %>
+		<form class="form" method="post" action="/<%= posts[0]['id'] %>">
+			<textarea id="spContent" name="content" cols="82"></textarea>
+			<div class="submit">发表留言</div>
+		</form>
+		<% } else{ %>
+			<p class="tips">登录之后才可以评论哟</p>
+		<% } %>
 		<div class="comment_list">
 			<% comments.forEach(function(res){ %>
 				<div class="cmt_lists">
@@ -86,36 +94,33 @@
 				</script>
 			<% }) %>
 		</div>	
-		<% if(session.user){ %>
-		<form class="form" method="post" action="/<%= posts[0]['id'] %>">
-			<textarea name="content" id=""></textarea>
-			<div class="submit">发表留言</div>
-		</form>
-		<% } else{ %>
-			<p class="tips">登录之后才可以评论哟</p>
-		<% } %>
 	</div>
 	<script>
 		$('.submit').click(function(){
-			$.ajax({
-				url: '/'+document.URL.slice(document.URL.lastIndexOf('/')+1),
-				data:$('.form').serialize(),
-				type: "POST",
-				cache: false,
-				dataType: 'json',
-				success: function (msg) {
-					if (msg) {
-						$('.success').text('发表留言成功')
-						fade('.success')
-						setTimeout(()=>{
-							window.location.reload()
-						},1000)  	
+			if ($('textarea').val().trim() == '') {
+				$('.error').text('请输入评论！')
+				fade('.error')
+			}else{
+				$.ajax({
+					url: '/'+document.URL.slice(document.URL.lastIndexOf('/')+1),
+					data:$('.form').serialize(),
+					type: "POST",
+					cache: false,
+					dataType: 'json',
+					success: function (msg) {
+						if (msg) {
+							$('.success').text('发表留言成功')
+							fade('.success')
+							setTimeout(()=>{
+								window.location.reload()
+							},1000)  	
+						}
+					},
+					error: function () {
+						alert('异常');
 					}
-				},
-				error: function () {
-					alert('异常');
-				}
-			})
+				})
+			}
 		})
 	</script>
 <% include footer %>

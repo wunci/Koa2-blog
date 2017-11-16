@@ -7,7 +7,7 @@ var checkLogin = require('../middlewares/check.js').checkLogin;
 router.get('/', async(ctx, next) => {
         ctx.redirect('/posts')
     })
-    // 文章页
+// 文章页
 router.get('/posts', async(ctx, next) => {
 
     if (ctx.request.querystring) {
@@ -83,14 +83,31 @@ router.post('/create', async(ctx, next) => {
     var content = ctx.request.body.content
     var id = ctx.session.id
     var name = ctx.session.user
-    var time = moment().format('YYYY-MM-DD HH:mm')
-        //console.log([name, title, content, id, time])
-    await userModel.insertPost([name, title, content, id, time])
-        .then(() => {
-            ctx.body = 'true'
-        }).catch(() => {
-            ctx.body = 'false'
-        })
+    var time = moment().format('YYYY-MM-DD HH:mm');
+    var newContent = content.replace(/[<">']/g, (target) => {
+        return {
+            '<': '&lt;',
+            '"': '&quot;',
+            '>': '&gt;',
+            "'": '&#39;'
+        }[target]
+    })
+    var newTitle = title.replace(/[<">']/g, (target) => {
+        return {
+            '<': '&lt;',
+            '"': '&quot;',
+            '>': '&gt;',
+            "'": '&#39;'
+        }[target]
+    })
+
+    //console.log([name, newTitle, content, id, time])
+    await userModel.insertPost([name, newTitle, newContent, id, time])
+            .then(() => {
+                ctx.body = 'true'
+            }).catch(() => {
+                ctx.body = 'false'
+            })
 
 })
 
@@ -137,8 +154,23 @@ router.post('/posts/:postId/edit', async(ctx, next) => {
     var content = ctx.request.body.content
     var id = ctx.session.id
     var postId = ctx.params.postId
-
-    await userModel.updatePost([title, content, postId])
+    var newTitle = title.replace(/[<">']/g, (target) => {
+        return {
+            '<': '&lt;',
+            '"': '&quot;',
+            '>': '&gt;',
+            "'": '&#39;'
+        }[target]
+    })
+    var newContent = content.replace(/[<">']/g, (target) => {
+        return {
+            '<': '&lt;',
+            '"': '&quot;',
+            '>': '&gt;',
+            "'": '&#39;'
+        }[target]
+    })
+    await userModel.updatePost([newTitle, newContent, postId])
         .then(() => {
             ctx.body = 'true'
         }).catch(() => {

@@ -14,32 +14,37 @@
 	</div>
 	<script>
 		$('.submit').click(()=>{
-			console.log($('.form').serialize())
-			$.ajax({
-	            url: "/signin",
-	            data: $('.form').serialize(),
-	            type: "POST",
-	            cache: false,
-	            dataType: 'json',
-	            success: function (msg) {
-	               if (!msg) {
-	               		$('.error').text('用户名或密码错误')
-	               		$('input').val('')
-	               		fade('.error')
-	               }
-	               else{
-	               		$('.success').text('登录成功')
-	               		fade('.success')
-	               		setTimeout(()=>{
-		               		window.location.href="/posts"
-
-	               		},1000)	               	
-	               }
-	            },
-	            error: function () {
-	                alert('异常');
-	            }
-	        })			
+			if ($('input[name=name]').val().trim() == '' || $('input[name=password]').val().trim() == '' ) {
+				$('.error').text('请输入用户名或密码')
+				fade('.error')
+			}else{
+				console.log($('.form').serialize())
+				$.ajax({
+					url: "/signin",
+					data: $('.form').serialize(),
+					type: "POST",
+					cache: false,
+					dataType: 'json',
+					success: function (msg) {
+					   if (!msg) {
+							   $('.error').text('用户名或密码错误')
+							   $('input').val('')
+							   fade('.error')
+					   }
+					   else{
+							   $('.success').text('登录成功')
+							   fade('.success')
+							   setTimeout(()=>{
+								   window.location.href = "/posts"
+	
+							   },1000)	               	
+					   }
+					},
+					error: function () {
+						alert('异常');
+					}
+				})			
+			}
 		})		
 	</script>
 <% include footer %>

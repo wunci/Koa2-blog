@@ -3,12 +3,12 @@
 	<form class="form create" method="post">
 		<div>
 			<label>标题：</label>
-			<input placeholder="标题" type="text" name="title" value="<%= posts[0]['title'] %>">
+			<input placeholder="标题" type="text" name="title" value="<%- posts[0]['title'] %>">
 		</div>
 		<div>
 			<label>内容：</label>
 			<textarea name="content" id="" cols="42" rows="10">
-				<%= posts[0]['content'] %>
+				<%- posts[0]['content'] %>
 			</textarea>
 		</div>
 		<div class="submit">修改</div>

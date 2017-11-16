@@ -3,15 +3,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>koa-blog</title>
+	<link rel="stylesheet" href="/index.css">
 </head>
 <body>
-	<link rel="stylesheet" href="/index.css">
 	<script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<header>
 		<div class="user_name">
 			user：
 			<% if(session.user){ %>
-				 <%= session.user %>
+				 <%- session.user %>
 			<% } %>
 			<% if(!session.user){ %>
 				未登录
@@ -26,6 +26,7 @@
 				<div class="has_user">
 					<a target="__blank" href="https://github.com/wclimb/Koa2-blog">GitHub</a>
 					<a href="/posts">全部文章</a>
+					<a href="/posts?author=<%- session.user %>">我的文章</a>
 					<a href="/create">发表文章</a>
 					<span class="signout">登出</span>
 				</div>
@@ -61,9 +62,8 @@
 	               		$('.success').text('登出成功')
 	               		fade('.success')
 	               		setTimeout(()=>{
-		               		window.location.href="/posts"
-	               		},1000)
-	               	
+		               		window.location.href = "/posts"
+	               		},1000)	
 	               }
 	            },
 	            error: function () {
