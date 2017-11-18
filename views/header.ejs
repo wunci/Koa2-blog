@@ -4,12 +4,45 @@
 	<meta charset="UTF-8">
 	<title>koa-blog</title>
 	<link rel="stylesheet" href="/index.css">
+	<script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+		function fade(data){
+			if ($(data).css('display')!=='none') {
+           		$(data).fadeOut(1500)
+       		}
+       		else{
+       			$(data).show()
+           		$(data).fadeOut(1500)
+       		}
+		}
+		$(function(){
+			$('.signout').click(()=>{
+				$.ajax({
+					url: "/signout",
+					type: "GET",
+					cache: false,
+					dataType: 'json',
+					success: function (msg) {
+					if (msg) {
+							$('.success').text('登出成功')
+							fade('.success')
+							setTimeout(()=>{
+								window.location.href = "/posts"
+							},1000)	
+					}
+					},
+					error: function () {
+						alert('异常');
+					}
+				})
+			})
+		})
+	</script>
 </head>
 <body>
-	<script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<header>
 		<div class="user_name">
-			user：
+			User:
 			<% if(session.user){ %>
 				 <%- session.user %>
 			<% } %>
@@ -41,34 +74,3 @@
 			<% } %>
 		</div>
 	</header>
-	<script>
-		function fade(data){
-			if ($(data).css('display')!=='none') {
-           		$(data).fadeOut(1500)
-       		}
-       		else{
-       			$(data).show()
-           		$(data).fadeOut(1500)
-       		}
-		}
-		$('.signout').click(()=>{
-			$.ajax({
-	            url: "/signout",
-	            type: "GET",
-	            cache: false,
-	            dataType: 'json',
-	            success: function (msg) {
-	               if (msg) {
-	               		$('.success').text('登出成功')
-	               		fade('.success')
-	               		setTimeout(()=>{
-		               		window.location.href = "/posts"
-	               		},1000)	
-	               }
-	            },
-	            error: function () {
-	                alert('异常');
-	            }
-	        })
-		})
-	</script>
