@@ -165,13 +165,14 @@ h3 {
 
 .cmt_name {
     position: absolute;
-    right: 20px;
+    right: 8px;
     bottom: 5px;
-    color: #aaa;
+    color: #333;
 }
 
 .cmt_name a {
-    margin-left: 10px;
+    margin-left: 5px;
+    color: #1E9FFF;
 }
 
 .cmt_content {
