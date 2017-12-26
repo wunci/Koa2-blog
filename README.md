@@ -48,7 +48,7 @@ $ git clone https://github.com/wclimb/Koa2-blog.git
 $ cd Koa2-blog
 ```
 ```
-$ cnpm i supervisor
+$ cnpm i supervisor -g
 $ cnpm i 
 ```
 ```
