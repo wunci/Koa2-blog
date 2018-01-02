@@ -44,7 +44,7 @@
 				type: 'POST',
 				data:{
 					page: val,
-					name: '<%- session.user %>'
+					name: location.search.slice(1).split('=')[1]
 				},
 				cache: false,
 				success: function (msg) {

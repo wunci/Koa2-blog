@@ -5,17 +5,18 @@
 	<title>koa2-blog</title>
 	<link rel="icon" href="http://www.wclimb.site/images/avatar.png">
 	<link rel="stylesheet" href="/index.css">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
 	<script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<script>
-		function fade(data){
-			if ($(data).css('display') !== 'none') {
-           		$(data).fadeOut(1500)
-       		}
-       		else{
-       			$(data).show()
-           		$(data).fadeOut(1500)
-       		}
+		function fade(txt){
+			$('.message').text(txt)
+			$('.message').animate({
+				top:0
+			})
+			setTimeout(function(){
+				$('.message').animate({
+					top: '-100%'
+				})
+			},1500)
 		}
 		$(function(){
 			$('.signout').click(()=>{
@@ -26,8 +27,7 @@
 					dataType: 'json',
 					success: function (msg) {
 						if (msg) {
-							$('.success').text('登出成功')
-							fade('.success')
+							fade('登出成功')
 							setTimeout(()=>{
 								window.location.href = "/posts"
 							},1000)	
@@ -44,18 +44,14 @@
 <body>
 	<header>
 		<div class="user_name">
-			
 			<% if(session.user){ %>
-				 hello,<%- session.user %>
+				 Hello,<%- session.user %>
 			<% } %>
 			<% if(!session.user){ %>
 				欢迎注册登录^_^
 			<% } %>
 		</div>
-		<div class="message">
-			<div class="error"></div>
-			<div class="success"></div>
-		</div>
+		<div class="message">登录成功</div>
 		<div class="user_right">
 			<%  if(session.user){ %>
 				<div class="has_user">
@@ -67,7 +63,7 @@
 				</div>
 			<% } %>
 			<% if(!session.user){ %>
-				<div class="none_user">
+				<div class="none_user has_user">
 					<a target="__blank" href="https://github.com/wclimb/Koa2-blog">GitHub</a>
 					<a href="/posts">全部文章</a>
 					<a  href="/signup">注册</a>

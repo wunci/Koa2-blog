@@ -1,14 +1,13 @@
 <% include header %>
 <div class="container">
-	
 	<form method="post" class="form create">
 		<div>
 			<label>标题：</label>
-			<input placeholder="" type="text" name="title">
+			<input placeholder="请输入标题" type="text" name="title">
 		</div>
 		<div>
 			<label>内容：</label>
-			<textarea name="content" id="" cols="42" rows="10"></textarea>
+			<textarea placeholder="请输入内容" name="content" id="" cols="42" rows="10"></textarea>
 		</div>
 		<div class="submit">发表</div>
 	</form>
@@ -16,11 +15,9 @@
 <script>
     $('.submit').click(()=>{
         if ($('input[name=title]').val().trim() == '') {
-            $('.error').text('请输入标题')
-            fade('.error')
+            fade('请输入标题')
         }else if ($('textarea').val().trim() == '') {
-            $('.error').text('请输入内容')
-            fade('.error')
+            fade('请输入内容')
         }else{          
             $.ajax({
                 url: "/create",
@@ -29,23 +26,20 @@
                 cache: false,
                 dataType: 'json',
                 success: function (msg) {
-                if (msg) {
-                        $('.success').text('发表成功')
-                        fade('.success')
+                    if (msg) {
+                            fade('发表成功')
+                            setTimeout(()=>{
+                                window.location.href="/posts"
+                            },1000)
+                    }else{
+                        fade('发表失败')
                         setTimeout(()=>{
-                            window.location.href="/posts"
+                            window.location.reload()
                         },1000)
-                }else{
-                    $('.success').text('发表失败')
-                    fade('.success')
-                    setTimeout(()=>{
-                        window.location.reload()
-                    },1000)
-                }
+                    }
                 },
                 error: function () {
                     alert('异常');
-    
                 }
             })			
         }   

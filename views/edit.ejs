@@ -22,8 +22,7 @@
             dataType: 'json',
             success: function (msg) {
                if (msg) {
-               		$('.success').text('修改成功')
-               		fade('.success')
+               		fade('修改成功')
                		setTimeout(()=>{
 	               		window.location.href="/posts"
                		},1000)

@@ -51,7 +51,7 @@
 		<div class="comment_list">
 			<% pageOne.forEach(function(res){ %>
 				<div class="cmt_lists">
-					<p class="cmt_content">
+					<div class="cmt_content">
 						<%= res['content'] %>
 						<span class="cmt_name">
 							from: <%= res['name'] %>
@@ -59,7 +59,7 @@
 								<a class="delete_comment" href="javascript:delete_comment(<%= res['id'] %>);"> 删除</a>
 							<% } %>
 						</span>
-					</p>
+					</div>
 				</div>
 			<% }) %>
 		</div>	
@@ -98,11 +98,11 @@
 						$('.comment_list').html(' ')
 						$.each(msg,function(i,val){
 							//console.log(val.content)
-							_comment += '<div class=\"cmt_lists\"><p class=\"cmt_content\">'+ val.content +'<span class=\"cmt_name\">from: '+ val.name ;
+							_comment += '<div class=\"cmt_lists\"><div class=\"cmt_content\">'+ val.content +'<span class=\"cmt_name\">from: '+ val.name ;
 								if (val.name == userName) {
 									_comment += '<a class=\"delete_comment\" href=\"javascript:delete_comment('+ val.id +');\"> 删除</a>'
 								}
-							_comment += '</span></p></div>'
+							_comment += '</span></div></div>'
 						})
 						$('.comment_list').append(_comment)
 					}else{
@@ -112,7 +112,7 @@
 			})
 		
 		})
-
+		
 		// 删除文章
 		$('.delete_post').click(() => {
 			$.ajax({
@@ -121,14 +121,12 @@
 				cache: false,
 				success: function (msg) {
 					if (msg.data == 1) {
-						$('.success').text('删除文章成功')
-						fade('.success')
+						fade('删除文章成功')
 						setTimeout(() => {
 							window.location.href = "/posts"
 						}, 1000)
 					} else if (msg.data == 2) {
-						$('.error').text('删除文章失败')
-						fade('.error');
+						fade('删除文章失败');
 						setTimeout(() => {
 							window.location.reload()
 						}, 1000)
@@ -142,8 +140,7 @@
 			if (!isAllow) return
 			isAllow = false
 			if ($('textarea').val().trim() == '') {
-				$('.error').text('请输入评论！')
-				fade('.error')
+				fade('请输入评论！')
 			}else{
 				
 				$.ajax({
@@ -156,13 +153,11 @@
 						
 						$('.submit').removeClass('disabled')
 						if (msg) {
-							$('.success').text('发表留言成功')
-							fade('.success')
-							
+							fade('发表留言成功')							
 							setTimeout(()=>{
 								isAllow = true
 								window.location.reload()
-							},1000)  	
+							},1500)  	
 						}
 					},
 					error: function () {
@@ -179,17 +174,15 @@
 				cache: false,
 				success: function (msg) {
 					if (msg.data == 1) {
-						$('.success').text('删除留言成功')
-						fade('.success')
+						fade('删除留言成功')
 						setTimeout(() => {
 							window.location.reload()
 						}, 1000)
 					} else if (msg.data == 2) {
-						$('.error').text('删除留言失败')
-						fade('.error');
+						fade('删除留言失败');
 						setTimeout(() => {
 							window.location.reload()
-						}, 1000)
+						}, 1500)
 					}
 				},
 				error: function () {

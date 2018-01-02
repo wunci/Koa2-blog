@@ -20,14 +20,18 @@
 		
 	</div>
 	<script>
+		$(window).keyup(function (e) {
+			//console.log(e.keyCode)
+			if (e.keyCode == 13) {
+				$('.submit').click()
+			}
+		})
 		$('.submit').click(()=>{
-			console.log($('.form').serialize())
+			// console.log($('.form').serialize())
 			if ($('input[name=name]').val().trim() == '') {
-				$('.error').text('请输入用户名')
-				fade('.error')
+				fade('请输入用户名')
 			}else if($('input[name=name]').val().match(/[<'">]/g)){
-				$('.error').text('请输入合法字符')
-				fade('.error')
+				fade('请输入合法字符')
 			}else{
 				$.ajax({
 					url: "/signup",
@@ -37,21 +41,18 @@
 					dataType: 'json',
 					success: function (msg) {
 					   if (msg.data == 1) {           		
-							   $('.error').text('用户名存在')
-							   $('input').val('')
-							   fade('.error')
+						   $('input').val('')
+						   fade('用户名存在')
 					   }
 					   else if (msg.data == 2){
-							   $('.error').text('请输入重复的密码')
-							   fade('.error')	               		
+							fade('请输入重复的密码')	               		
 					   }
 					   else if(msg.data == 3){
-							   $('.success').text('注册成功')
-							   fade('.success')
-							   setTimeout(()=>{
-								   window.location.href="/signin"	  
-							   },1000)
-					   }
+							fade('注册成功')
+							setTimeout(()=>{
+								window.location.href="/signin"	  
+							},1000)
+					   	}
 					},
 					error: function () {
 						alert('异常');
