@@ -28,24 +28,26 @@ router.post('/signup', async(ctx, next) => {
                     //处理err
                     console.log(error)
                 }
-
+                // 用户存在
                 ctx.body = {
                     data: 1
                 };;
+                
             } else if (user.pass !== user.repeatpass || user.pass == '') {
                 ctx.body = {
                     data: 2
                 };
 
             } else {
-
+                //注册成功
                 ctx.body = {
                     data: 3
                 };
-
-                console.log('注册成功')
-                    // ctx.session.user=ctx.request.body.name				
+                // ctx.session.user=ctx.request.body.name               
                 userModel.insertData([ctx.request.body.name, md5(ctx.request.body.password)])
+                    .then(res=>{
+                        console.log('注册成功')
+                    })
             }
         })
 

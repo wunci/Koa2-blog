@@ -8,7 +8,7 @@ var config = require('./config/default.js');
 var router=require('koa-router')
 var views = require('koa-views')
 var koaStatic = require('koa-static')
-var app=new Koa()
+var app = new Koa()
 
 
 // session存储配置
@@ -24,7 +24,6 @@ app.use(session({
   key: 'USER_SID',
   store: new MysqlStore(sessionMysqlConfig)
 }))
-
 
 // 配置静态资源加载中间件
 app.use(koaStatic(
@@ -45,9 +44,6 @@ app.use(require('./routers/posts.js').routes())
 app.use(require('./routers/signout.js').routes())
 
 
-if (module.parent) {
-  	module.exports = app;
-}else{
-	app.listen(3000)
-}
+app.listen(3000)
+
 console.log(`listening on port ${config.port}`)

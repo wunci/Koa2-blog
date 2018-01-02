@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "supervisor --harmony index",
-    "test": "mocha --harmony test"
+    "test": "./node_modules/mocha/bin/mocha --harmony test"
   },
   "author": "wclimb",
   "license": "MIT",
@@ -22,9 +22,11 @@
     "koa-session-minimal": "^3.0.4",
     "koa-static": "^4.0.0",
     "koa-views": "^6.0.2",
+    "markdown-it": "^8.4.0",
     "md5": "^2.2.1",
     "moment": "^2.18.1",
-    "mysql": "^2.13.0"
+    "mysql": "^2.13.0",
+    "turndown": "^4.0.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",

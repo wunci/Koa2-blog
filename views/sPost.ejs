@@ -1,33 +1,55 @@
 <% include header %>
-	<div class="spost">
-		<p class="spost_user">author: <a href="/posts?author=<%= posts[0]['name'] %>"><%- posts[0]['name'] %></a></p>
-		<div class="post_title">
-			<h3>title</h3>
-			<p><a href="/posts/<%= posts[0]['id'] %>"><%- posts[0]['title'] %></a></p>
-		</div>
-		<div class="post_content">
-			<h3>content</h3>
-			<p><%- posts[0]['content'] %></p>
-		</div>
-		<div class="edit">
-			<% if(session && session.user ===  posts[0]['name']  ){ %>
-			<p><a href="<%= posts[0]['id'] %>/edit">编辑</a></p>
-			<p><a class="delete_post" >删除</a></p>
-			<% } %>
-		</div>
+	<div class="container">
+		<ul class="posts spost">
+			<li>
+				<div class="author">
+					<span title="<%= posts.name %>"><a href="/posts?author=<%= posts.name %> ">author: <%= posts.name %></a></span>
+					<span>评论数：<%= posts.comments %></span>
+					<span>浏览量：<%= posts.pv %></span>
+				</div>
+				<div class="comment_pv">
+					<span><%= posts.moment %></span>
+				</div>
+				<a href="/posts/<%= posts.id %>">
+					<div class="title">
+						<span>#<%= posts.id %></span>
+						<%= posts.title %>
+					</div>
+					<div class="content">
+						<%- posts.content %>
+					</div>
+				</a>
+				<div class="edit">
+					<% if(session && session.user ===  posts.name  ){ %>
+					<p><a href="<%= posts['id'] %>/edit">编辑</a></p>
+					<p><a class="delete_post">删除</a></p>
+					<% } %>
+				</div>
+			</li>
+			<!-- <p class="spost_user">author: <a href="/posts?author=<%= posts['name'] %>"><%- posts['name'] %></a></p>
+			<div class="post_title">
+				<h3>title</h3>
+				<p><a href="/posts/<%= posts['id'] %>"><%- posts['title'] %></a></p>
+			</div>
+			<div class="post_content">
+				<h3>content</h3>
+				<p><%- posts['content'] %></p>
+			</div> -->
+		</ul>
 	</div>
 	<div class="comment_wrap">
-		<h3>comment</h3>
+
 		<% if(session.user){ %>
-		<form class="form" method="post" action="/<%= posts[0]['id'] %>">
+		<form class="form" method="post" action="/<%= posts.id %>">
 			<textarea id="spContent" name="content" cols="82"></textarea>
 			<div class="submit">发表留言</div>
 		</form>
 		<% } else{ %>
 			<p class="tips">登录之后才可以评论哟</p>
 		<% } %>
+		<% if (commentPageLenght > 0) { %>
 		<div class="comment_list">
-			<% comments.forEach(function(res){ %>
+			<% pageOne.forEach(function(res){ %>
 				<div class="cmt_lists">
 					<p class="cmt_content">
 						<%= res['content'] %>
@@ -41,13 +63,61 @@
 				</div>
 			<% }) %>
 		</div>	
+		<% } else{ %>
+			<p class="tips">还没有评论，赶快去评论吧！</p>
+		<% } %>
+		<div style="margin-top: 30px" class="pagination" id="page"></div>	
 	</div>
+	<script src="http://www.wclimb.site/pagination/pagination.js"></script>
 	<script>
+		var userName = "<%- session.user %>"
+		pagination({
+			selector: '#page',
+			totalPage: <%= commentPageLenght %>,
+			currentPage: 1,
+			prev: '上一页',
+			next: '下一页',
+			first: true,
+			last: true,
+			showTotalPage:true,
+			count: 2//当前页前面显示的数量
+		},function(val){
+			// 当前页
+			var _comment = ''
+			$.ajax({
+				url: "<%= posts.id %>/commentPage",
+				type: 'POST',
+				data:{
+					page: val
+				},
+				cache: false,
+				success: function (msg) {
+					//console.log(msg)
+					_comment = ''
+					if (msg != 'error') {
+						$('.comment_list').html(' ')
+						$.each(msg,function(i,val){
+							//console.log(val.content)
+							_comment += '<div class=\"cmt_lists\"><p class=\"cmt_content\">'+ val.content +'<span class=\"cmt_name\">from: '+ val.name ;
+								if (val.name == userName) {
+									_comment += '<a class=\"delete_comment\" href=\"javascript:delete_comment('+ val.id +');\"> 删除</a>'
+								}
+							_comment += '</span></p></div>'
+						})
+						$('.comment_list').append(_comment)
+					}else{
+						alert('分页不存在')
+					} 
+				}
+			})
+		
+		})
+
 		// 删除文章
 		$('.delete_post').click(() => {
 			$.ajax({
-				url: "<%= posts[0]['id'] %>/remove",
-				type: 'GET',
+				url: "<%= posts.id %>/remove",
+				type: 'POST',
 				cache: false,
 				success: function (msg) {
 					if (msg.data == 1) {
@@ -67,11 +137,15 @@
 			})
 		})
 		// 评论
+		var isAllow = true
 		$('.submit').click(function(){
+			if (!isAllow) return
+			isAllow = false
 			if ($('textarea').val().trim() == '') {
 				$('.error').text('请输入评论！')
 				fade('.error')
 			}else{
+				
 				$.ajax({
 					url: '/'+document.URL.slice(document.URL.lastIndexOf('/')+1),
 					data:$('.form').serialize(),
@@ -79,11 +153,14 @@
 					cache: false,
 					dataType: 'json',
 					success: function (msg) {
+						
+						$('.submit').removeClass('disabled')
 						if (msg) {
 							$('.success').text('发表留言成功')
 							fade('.success')
-							$('')
+							
 							setTimeout(()=>{
+								isAllow = true
 								window.location.reload()
 							},1000)  	
 						}
@@ -96,30 +173,29 @@
 		})
 		// 删除评论
 		function delete_comment(id) {
-				$.ajax({
-					url: "<%= posts[0]['id'] %>/comment/" + id + "/remove",
-					type: 'GET',
-					cache: false,
-					success: function (msg) {
-						if (msg.data == 1) {
-							$('.success').text('删除留言成功')
-							fade('.success')
-							setTimeout(() => {
-								window.location.reload()
-							}, 1000)
-						} else if (msg.data == 2) {
-							$('.error').text('删除留言失败')
-							fade('.error');
-							setTimeout(() => {
-								window.location.reload()
-							}, 1000)
-						}
-					},
-					error: function () {
-						alert('异常')
+			$.ajax({
+				url: "<%= posts.id %>/comment/" + id + "/remove",
+				type: 'POST',
+				cache: false,
+				success: function (msg) {
+					if (msg.data == 1) {
+						$('.success').text('删除留言成功')
+						fade('.success')
+						setTimeout(() => {
+							window.location.reload()
+						}, 1000)
+					} else if (msg.data == 2) {
+						$('.error').text('删除留言失败')
+						fade('.error');
+						setTimeout(() => {
+							window.location.reload()
+						}, 1000)
 					}
-				})
-			
+				},
+				error: function () {
+					alert('异常')
+				}
+			})
 		}
 	</script>
 <% include footer %>

@@ -3,69 +3,106 @@ var userModel = require('../lib/mysql.js')
 var moment = require('moment')
 var checkNotLogin = require('../middlewares/check.js').checkNotLogin
 var checkLogin = require('../middlewares/check.js').checkLogin;
+var TurndownService = require('turndown');
+var md = require('markdown-it')();  
 // 重置到文章页
 router.get('/', async(ctx, next) => {
-        ctx.redirect('/posts')
-    })
+    ctx.redirect('/posts')
+})
 // 文章页
 router.get('/posts', async(ctx, next) => {
-
+    var res,
+        postsLength,
+        name = decodeURIComponent(ctx.request.querystring.split('=')[1]);
     if (ctx.request.querystring) {
-        console.log('ctx.request.querystring', decodeURIComponent(ctx.request.querystring.split('=')[1]))
-        await userModel.findDataByUser(decodeURIComponent(ctx.request.querystring.split('=')[1]))
+        console.log('ctx.request.querystring', name)
+        await userModel.findDataByUser(name)
             .then(result => {
-                res = JSON.parse(JSON.stringify(result))
-                    //console.log(res)
+                postsLength = result.length
             })
-        await ctx.render('posts', {
+        await userModel.findPostByUserPage(name,1)
+            .then(result => {
+                res = result
+            })
+        await ctx.render('selfPosts', {
             session: ctx.session,
-            posts: res
+            posts: res,
+            postsPageLength:Math.ceil(postsLength / 10),
         })
     } else {
-        await userModel.findAllPost()
+        await userModel.findPostByPage(1)
             .then(result => {
-                console.log(result)
-                res = JSON.parse(JSON.stringify(result))
-                    console.log('post', res)
+                //console.log(result)
+                res = result
             })
-
+        await userModel.findAllPost()
+            .then(result=>{
+                postsLength = result.length
+            })    
         await ctx.render('posts', {
             session: ctx.session,
-            posts: res
+            posts: res,
+            postsLength: postsLength,
+            postsPageLength: Math.ceil(postsLength / 10),
+            
         })
     }
 })
 
-// 滚动无限加载数据，每次输出5条
-router.post('/posts/page/:postId', async(ctx, next) => {
-
-     await userModel.findPageById(ctx.params.postId)
+// 首页分页，每次输出10条
+router.post('/posts/page', async(ctx, next) => {
+    var page = ctx.request.body.page;
+       
+     await userModel.findPostByPage(page)
             .then(result=>{
-                console.log(result)
-                 ctx.body = result   
-            })
+                //console.log(result)
+                ctx.body = result   
+            }).catch(()=>{
+            ctx.body = 'error'
+        })  
 })
-
+// 个人文章分页，每次输出10条
+router.post('/posts/self/page', async(ctx, next) => {
+    var data = ctx.request.body
+    await userModel.findPostByUserPage(data.name,data.page)
+            .then(result=>{
+                //console.log(result)
+                ctx.body = result   
+            }).catch(()=>{
+            ctx.body = 'error'
+        })  
+})
 // 单篇文章页
 router.get('/posts/:postId', async(ctx, next) => {
-    //console.log(ctx.params.postId)
+    var comment_res,
+        res,
+        pageOne,
+        res_pv;
     await userModel.findDataById(ctx.params.postId)
         .then(result => {
-            res = JSON.parse(JSON.stringify(result))
-            res_pv = parseInt(JSON.parse(JSON.stringify(result))[0]['pv'])
+            //console.log(result )
+            res = result
+            res_pv = parseInt(result[0]['pv'])
             res_pv += 1
-            console.log(res)
+           // console.log(res_pv)
         })
     await userModel.updatePostPv([res_pv, ctx.params.postId])
+    await userModel.findCommentByPage(1,ctx.params.postId)
+        .then(result => {
+            pageOne = result
+            //console.log('comment', comment_res)
+        })
     await userModel.findCommentById(ctx.params.postId)
         .then(result => {
-            comment_res = JSON.parse(JSON.stringify(result))
-                //console.log('comment', comment_res)
+            comment_res = result
+            //console.log('comment', comment_res)
         })
     await ctx.render('sPost', {
         session: ctx.session,
-        posts: res,
-        comments: comment_res
+        posts: res[0],
+        commentLenght: comment_res.length,
+        commentPageLenght: Math.ceil(comment_res.length/10),
+        pageOne:pageOne
     })
 
 })
@@ -79,30 +116,31 @@ router.get('/create', async(ctx, next) => {
 
 // post 发表文章
 router.post('/create', async(ctx, next) => {
-    var title = ctx.request.body.title
-    var content = ctx.request.body.content
-    var id = ctx.session.id
-    var name = ctx.session.user
-    var time = moment().format('YYYY-MM-DD HH:mm');
-    var newContent = content.replace(/[<">']/g, (target) => {
-        return {
-            '<': '&lt;',
-            '"': '&quot;',
-            '>': '&gt;',
-            "'": '&#39;'
-        }[target]
-    })
-    var newTitle = title.replace(/[<">']/g, (target) => {
-        return {
-            '<': '&lt;',
-            '"': '&quot;',
-            '>': '&gt;',
-            "'": '&#39;'
-        }[target]
-    })
+    var title = ctx.request.body.title,
+        content = ctx.request.body.content,
+        id = ctx.session.id,
+        name = ctx.session.user,
+        time = moment().format('YYYY-MM-DD HH:mm'),
+        // 现在使用markdown不需要单独转义
+        newContent = content.replace(/[<">']/g, (target) => { 
+            return {
+                '<': '&lt;',
+                '"': '&quot;',
+                '>': '&gt;',
+                "'": '&#39;'
+            }[target]
+        }),
+        newTitle = title.replace(/[<">']/g, (target) => {
+            return {
+                '<': '&lt;',
+                '"': '&quot;',
+                '>': '&gt;',
+                "'": '&#39;'
+            }[target]
+        });
 
     //console.log([name, newTitle, content, id, time])
-    await userModel.insertPost([name, newTitle, newContent, id, time])
+    await userModel.insertPost([name, newTitle, md.render(content) , id, time])
             .then(() => {
                 ctx.body = 'true'
             }).catch(() => {
@@ -113,14 +151,15 @@ router.post('/create', async(ctx, next) => {
 
 // 发表评论
 router.post('/:postId', async(ctx, next) => {
-    var name = ctx.session.user
-    var content = ctx.request.body.content
-    var postId = ctx.params.postId
+    var name = ctx.session.user,
+        content = ctx.request.body.content,
+        postId = ctx.params.postId,
+        res_comments;
 
     await userModel.insertComment([name, content, postId])
     await userModel.findDataById(postId)
         .then(result => {
-            res_comments = parseInt(JSON.parse(JSON.stringify(result))[0]['comments'])
+            res_comments = parseInt(result[0]['comments'])
             res_comments += 1
         })
     await userModel.updatePostComment([res_comments, postId])
@@ -133,44 +172,47 @@ router.post('/:postId', async(ctx, next) => {
 
 // 编辑单篇文章页面
 router.get('/posts/:postId/edit', async(ctx, next) => {
-    var name = ctx.session.user
-    var postId = ctx.params.postId
-
+    var name = ctx.session.user,
+        postId = ctx.params.postId,
+        res,
+        turndownService = new TurndownService()
     await userModel.findDataById(postId)
         .then(result => {
-            res = JSON.parse(JSON.stringify(result))
-                //console.log('修改文章', res)
+            res = result[0]
+            //console.log('修改文章', res)
         })
     await ctx.render('edit', {
         session: ctx.session,
-        posts: res
+        postsContent:  turndownService.turndown(res.content),
+        postsTitle:  res.title
     })
 
 })
 
 // post 编辑单篇文章
 router.post('/posts/:postId/edit', async(ctx, next) => {
-    var title = ctx.request.body.title
-    var content = ctx.request.body.content
-    var id = ctx.session.id
-    var postId = ctx.params.postId
-    var newTitle = title.replace(/[<">']/g, (target) => {
-        return {
-            '<': '&lt;',
-            '"': '&quot;',
-            '>': '&gt;',
-            "'": '&#39;'
-        }[target]
-    })
-    var newContent = content.replace(/[<">']/g, (target) => {
-        return {
-            '<': '&lt;',
-            '"': '&quot;',
-            '>': '&gt;',
-            "'": '&#39;'
-        }[target]
-    })
-    await userModel.updatePost([newTitle, newContent, postId])
+    var title = ctx.request.body.title,
+        content = ctx.request.body.content,
+        id = ctx.session.id,
+        postId = ctx.params.postId,
+         // 现在使用markdown不需要单独转义
+        newTitle = title.replace(/[<">']/g, (target) => {
+            return {
+                '<': '&lt;',
+                '"': '&quot;',
+                '>': '&gt;',
+                "'": '&#39;'
+            }[target]
+        }),
+        newContent = content.replace(/[<">']/g, (target) => {
+            return {
+                '<': '&lt;',
+                '"': '&quot;',
+                '>': '&gt;',
+                "'": '&#39;'
+            }[target]
+        });
+    await userModel.updatePost([newTitle, md.render(content), postId])
         .then(() => {
             ctx.body = 'true'
         }).catch(() => {
@@ -181,8 +223,7 @@ router.post('/posts/:postId/edit', async(ctx, next) => {
 })
 
 // 删除单篇文章
-router.get('/posts/:postId/remove', async(ctx, next) => {
-
+router.post('/posts/:postId/remove', async(ctx, next) => {
         var postId = ctx.params.postId
         await userModel.deleteAllPostComment(postId)
         await userModel.deletePost(postId)
@@ -190,7 +231,6 @@ router.get('/posts/:postId/remove', async(ctx, next) => {
                 ctx.body = {
                     data: 1
                 }
-
             }).catch(() => {
                 ctx.body = {
                     data: 2
@@ -198,17 +238,17 @@ router.get('/posts/:postId/remove', async(ctx, next) => {
             })
 
     })
-    // 删除评论
-router.get('/posts/:postId/comment/:commentId/remove', async(ctx, next) => {
-
-    var postId = ctx.params.postId
-    var commentId = ctx.params.commentId
+// 删除评论
+router.post('/posts/:postId/comment/:commentId/remove', async(ctx, next) => {
+    var postId = ctx.params.postId,
+        commentId = ctx.params.commentId,
+        res_comments;
     await userModel.findDataById(postId)
         .then(result => {
-            res_comments = parseInt(JSON.parse(JSON.stringify(result))[0]['comments'])
-            console.log('res', res_comments)
+            res_comments = parseInt(result[0]['comments'])
+            //console.log('res', res_comments)
             res_comments -= 1
-            console.log(res_comments)
+            //console.log(res_comments)
         })
     await userModel.updatePostComment([res_comments, postId])
     await userModel.deleteComment(commentId)
@@ -224,6 +264,16 @@ router.get('/posts/:postId/comment/:commentId/remove', async(ctx, next) => {
         })
 
 })
-
+// 评论分页
+router.post('/posts/:postId/commentPage', async function(ctx){
+    var postId = ctx.params.postId,
+        page = ctx.request.body.page;
+    await userModel.findCommentByPage(page,postId)
+        .then(res=>{
+            ctx.body = res
+        }).catch(()=>{
+            ctx.body = 'error'
+        })  
+})
 
 module.exports = router

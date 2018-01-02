@@ -40,14 +40,15 @@
 		},function(val){
 			// 当前页
 			$.ajax({
-				url: "posts/page",
+				url: "posts/self/page",
 				type: 'POST',
 				data:{
-					page: val
+					page: val,
+					name: '<%- session.user %>'
 				},
 				cache: false,
 				success: function (msg) {
-					console.log(msg)
+					//console.log(msg)
 					if (msg != 'error') {
 						$('.posts').html(' ')
 						$.each(msg,function(i,val){
@@ -79,55 +80,5 @@
 			})
 		
 		})
-		/*//滚动加载数据，现在做成分页的
-		// 初始化数据输出
-		eachInit(postList)
-		var page = 2,
-			lock = true;
-		// 无限加载 每次输出5条
-		$(window).scroll(function(){
-			if (window.innerHeight + document.documentElement.scrollTop + 50 > document.documentElement.scrollHeight && lock) {
-				lock = false
-				$.ajax({
-					url:'/posts/page/'+page,
-					type:'POST',
-					success:function(res){
-						$('.posts').html('')
-						postList = postList.concat(res)
-						eachInit(postList)
-						page++
-						lock = true;
-						if (res.length == 0) {
-							$('body').append('<p class="tips">没有了，再扯滚动条都要被你扯坏了→_→  !</p>')
-							lock = false;
-						}
-					}
-				})
-			}	
-		})
-		function eachInit(arr){
-			$.each(arr,function(i,val){
-				document.querySelector('.posts').innerHTML += `
-					<li>
-						<div class="post_3">
-							<p class="post_user"><a href="/posts?author=${val['name']} ">作者: ${val['name']}</a></p>
-							<p class="post_comments">评论数：${val['comments']} </p>
-							<p class="post_pv">浏览数：${val['pv']} %></p>
-						</div>
-						<a target="_blank" href="/posts/${val['id']}">
-							<div class="post_title">
-								<h3>title</h3>
-								<p>${val['title']}</p>
-							</div>
-							<div class="post_content">
-								<h3>content</h3>
-								<p>${val['content']}</p>
-							</div>
-						</a>
-						<!-- <p>userid:${val['uid']}</p> -->
-						<p class="post_time">发表时间：${val['moment']}</p>
-					</li>		`	
-			})
-		}*/
 	</script>
 <% include footer %>

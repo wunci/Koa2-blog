@@ -18,23 +18,20 @@ router.post('/signin', async(ctx, next) => {
 
     await userModel.findDataByName(name)
         .then(result => {
-
-            var res = JSON.parse(JSON.stringify(result))
-
+            var res = result
             if (name === res[0]['name'] && md5(pass) === res[0]['pass']) {
-                ctx.body = 'true'
-
+                ctx.body = true
                 ctx.session.user = res[0]['name']
                 ctx.session.id = res[0]['id']
                 console.log('ctx.session.id', ctx.session.id)
-
                 console.log('session', ctx.session)
-
                 console.log('登录成功')
-
+            }else{
+                ctx.body = false
+                console.log('用户名或密码错误!')
             }
         }).catch(err => {
-            ctx.body = 'false'
+            ctx.body = false
             console.log('用户名或密码错误!')
 
         })

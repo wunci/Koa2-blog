@@ -5,10 +5,11 @@
 	<title>koa2-blog</title>
 	<link rel="icon" href="http://www.wclimb.site/images/avatar.png">
 	<link rel="stylesheet" href="/index.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
 	<script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<script>
 		function fade(data){
-			if ($(data).css('display')!=='none') {
+			if ($(data).css('display') !== 'none') {
            		$(data).fadeOut(1500)
        		}
        		else{
@@ -24,13 +25,13 @@
 					cache: false,
 					dataType: 'json',
 					success: function (msg) {
-					if (msg) {
+						if (msg) {
 							$('.success').text('登出成功')
 							fade('.success')
 							setTimeout(()=>{
 								window.location.href = "/posts"
 							},1000)	
-					}
+						}
 					},
 					error: function () {
 						alert('异常');
@@ -43,12 +44,12 @@
 <body>
 	<header>
 		<div class="user_name">
-			User:
+			
 			<% if(session.user){ %>
-				 <%- session.user %>
+				 hello,<%- session.user %>
 			<% } %>
 			<% if(!session.user){ %>
-				未登录
+				欢迎注册登录^_^
 			<% } %>
 		</div>
 		<div class="message">
