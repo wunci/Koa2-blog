@@ -52,7 +52,7 @@
 			<% pageOne.forEach(function(res){ %>
 				<div class="cmt_lists">
 					<div class="cmt_content">
-						<%= res['content'] %>
+						<%- res['content'] %>
 						<span class="cmt_name">
 							from: <%= res['name'] %>
 							<% if(session && session.user ===  res['name']){ %>

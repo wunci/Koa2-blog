@@ -168,6 +168,7 @@ header .user_name {
     padding: 20px;
     position: relative;
     border-radius: 4px;
+    word-break: break-all;
 }
 .cmt_content img{
     max-width: 100%;
