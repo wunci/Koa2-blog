@@ -7,7 +7,8 @@ div,
 html,
 span,
 h3,
-a {
+a,
+blockquote {
     margin: 0;
     padding: 0;
     color: #333;
@@ -34,6 +35,12 @@ header:after{
 }
 header .user_right{
     float: right
+}
+header .user_right .active{
+    color: #5FB878;
+    background: #fff;
+    border: 1px solid #5FB878;
+    box-shadow: 0 5px 5px #ccc;
 }
 header .user_name {
     float: left
@@ -65,7 +72,7 @@ header .user_name {
     border-radius: 4px; 
     border: 1px solid #ddd;
 }
-.posts li{
+.posts > li{
     padding: 10px;
     position: relative;
     padding-bottom: 40px;
@@ -83,14 +90,17 @@ header .user_name {
 .posts .author span{
     margin-right: 5px;
 }
-.posts li:hover {
+.posts > li:hover {
     background: #f2f2f2;
 }
-.posts li:hover .content{
+.posts > li:hover pre{
+    background: #fff;
+}
+.posts > li:hover .content{
     border-top: 1px solid #fff;
     border-bottom: 1px solid #fff;
 }
-.posts li + li{
+.posts > li + li{
     border-top: 1px solid #ddd;
 }
 .posts li .title span{
@@ -173,7 +183,7 @@ header .user_name {
 .cmt_content img{
     max-width: 100%;
 }
-.cmt_content:after {
+/* .cmt_content:after {
     content: '#content';
     position: absolute;
     top: 5px;
@@ -181,7 +191,7 @@ header .user_name {
     color: #aaa;
     font-size: 13px;
 }
-
+ */
 .cmt_name {
     position: absolute;
     right: 8px;
@@ -193,8 +203,13 @@ header .user_name {
     margin-left: 5px;
     color: #1E9FFF;
 }
-
-
+.cmt_time{
+    position: absolute;
+    font-size: 12px;
+    right: 5px;
+    top: 5px;
+    color: #aaa
+}
 .form {
     margin: 0 auto;
     width: 50%;
@@ -293,4 +308,21 @@ a:hover {
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     z-index: 99999;
+}
+.markdown pre{
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    background: #F0F0F0;
+    border-radius: 3px;
+}
+.markdown blockquote{
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: 0.25em solid #dfe2e5;
+    margin: 10px 0;
+}
+.markdown ul li{
+    list-style: circle;
+    margin-top: 5px;
 }

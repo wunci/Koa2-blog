@@ -1,6 +1,6 @@
-<% include header %>
+<%- include("header",{type:'create'}) %>
 <div class="container">
-	<form method="post" class="form create">
+	<form style="width:100%" method="post" class="form create">
 		<div>
 			<label>标题：</label>
 			<input placeholder="请输入标题" type="text" name="title">
@@ -27,15 +27,12 @@
                 dataType: 'json',
                 success: function (msg) {
                     if (msg) {
-                            fade('发表成功')
-                            setTimeout(()=>{
-                                window.location.href="/posts"
-                            },1000)
+                        fade('发表成功')
+                        setTimeout(()=>{
+                            window.location.href="/posts"
+                        },1000)
                     }else{
                         fade('发表失败')
-                        setTimeout(()=>{
-                            window.location.reload()
-                        },1000)
                     }
                 },
                 error: function () {

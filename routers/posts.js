@@ -120,7 +120,7 @@ router.post('/create', async(ctx, next) => {
         content = ctx.request.body.content,
         id = ctx.session.id,
         name = ctx.session.user,
-        time = moment().format('YYYY-MM-DD HH:mm'),
+        time = moment().format('YYYY-MM-DD HH:mm:ss'),
         // 现在使用markdown不需要单独转义
         newContent = content.replace(/[<">']/g, (target) => { 
             return {
@@ -140,11 +140,11 @@ router.post('/create', async(ctx, next) => {
         });
 
     //console.log([name, newTitle, content, id, time])
-    await userModel.insertPost([name, newTitle, md.render(content) , id, time])
+    await userModel.insertPost([name, newTitle, md.render(content), content, id, time])
             .then(() => {
-                ctx.body = 'true'
+                ctx.body = true
             }).catch(() => {
-                ctx.body = 'false'
+                ctx.body = false
             })
 
 })
@@ -154,9 +154,10 @@ router.post('/:postId', async(ctx, next) => {
     var name = ctx.session.user,
         content = ctx.request.body.content,
         postId = ctx.params.postId,
-        res_comments;
+        res_comments,
+        time = moment().format('YYYY-MM-DD HH:mm:ss')
 
-    await userModel.insertComment([name, md.render(content), postId])
+    await userModel.insertComment([name, md.render(content),time, postId])
     await userModel.findDataById(postId)
         .then(result => {
             res_comments = parseInt(result[0]['comments'])
@@ -164,9 +165,9 @@ router.post('/:postId', async(ctx, next) => {
         })
     await userModel.updatePostComment([res_comments, postId])
         .then(() => {
-            ctx.body = 'true'
+            ctx.body = true
         }).catch(() => {
-            ctx.body = 'false'
+            ctx.body = false
         })
 })
 
@@ -183,7 +184,7 @@ router.get('/posts/:postId/edit', async(ctx, next) => {
         })
     await ctx.render('edit', {
         session: ctx.session,
-        postsContent:  turndownService.turndown(res.content),
+        postsContent: res.md,
         postsTitle:  res.title
     })
 
@@ -212,11 +213,11 @@ router.post('/posts/:postId/edit', async(ctx, next) => {
                 "'": '&#39;'
             }[target]
         });
-    await userModel.updatePost([newTitle, md.render(content), postId])
+    await userModel.updatePost([newTitle, md.render(content), content, postId])
         .then(() => {
-            ctx.body = 'true'
+            ctx.body = true
         }).catch(() => {
-            ctx.body = 'false'
+            ctx.body = false
         })
 
 

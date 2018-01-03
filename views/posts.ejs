@@ -1,4 +1,4 @@
-<% include header %>
+<%- include("header",{type:'all'}) %>
 	<div class="container">
 		<ul class="posts">
 			<% posts.forEach(function(res){ %>
@@ -16,7 +16,7 @@
 							<span>#<%= res.id %></span>
 							<%= res.title %>
 						</div>
-						<div class="content">
+						<div class="content markdown">
 							<%- res.content %>
 						</div>
 					</a>
@@ -52,26 +52,28 @@
 						$('.posts').html(' ')
 						$.each(msg,function(i,val){
 							//console.log(val.content)
-							$('.posts').append('<li>'+
-													'<div class=\"author\">'+
-														'<span title=\"'+ val.name +'\"><a href=\"/posts?author='+ val.name +' \">author: '+ val.name +'</a></span>'+
-														'<span>评论数：'+ val.comments +'</span>'+
-														'<span>浏览量：'+ val.pv +'</span>'+
-													'</div>'+
-													'<div class=\"comment_pv\">'+
-														'<span>'+ val.moment +'</span>'+
-													'</div>'+
-													'<a href=\"/posts/'+ val.id +'\">'+
-														'<div class=\"title\">'+
-															'<span>#'+ val.id +'</span>'+
-															 val.title +
-														'</div>'+
-														'<div class=\"content\">'+
-															 val.content +
-														'</div>'+
-													'</a>'+
-												'</li>')
-											})
+							$('.posts').append(
+								'<li>'+
+									'<div class=\"author\">'+
+										'<span title=\"'+ val.name +'\"><a href=\"/posts?author='+ val.name +' \">author: '+ val.name +'</a></span>'+
+										'<span>评论数：'+ val.comments +'</span>'+
+										'<span>浏览量：'+ val.pv +'</span>'+
+									'</div>'+
+									'<div class=\"comment_pv\">'+
+										'<span>'+ val.moment +'</span>'+
+									'</div>'+
+									'<a href=\"/posts/'+ val.id +'\">'+
+										'<div class=\"title\">'+
+											'<span>#'+ val.id +'</span>'+
+											 val.title +
+										'</div>'+
+										'<div class=\"content\">'+
+											 val.content +
+										'</div>'+
+									'</a>'+
+								'</li>'
+							)
+						})
 					}else{
 						alert('分页不存在')
 					} 

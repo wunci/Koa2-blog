@@ -1,4 +1,4 @@
-<% include header %>
+<%- include("header",{type:''}) %>
 	<div class="container">
 		<ul class="posts spost">
 			<li>
@@ -15,7 +15,7 @@
 						<span>#<%= posts.id %></span>
 						<%= posts.title %>
 					</div>
-					<div class="content">
+					<div class="content markdown">
 						<%- posts.content %>
 					</div>
 				</a>
@@ -48,13 +48,15 @@
 			<p class="tips">登录之后才可以评论哟</p>
 		<% } %>
 		<% if (commentPageLenght > 0) { %>
-		<div class="comment_list">
+		<div class="comment_list markdown">
 			<% pageOne.forEach(function(res){ %>
 				<div class="cmt_lists">
 					<div class="cmt_content">
 						<%- res['content'] %>
+						<span class="cmt_time"><%= res['moment'] %></span>
 						<span class="cmt_name">
-							from: <%= res['name'] %>
+
+							By: <%= res['name'] %>
 							<% if(session && session.user ===  res['name']){ %>
 								<a class="delete_comment" href="javascript:delete_comment(<%= res['id'] %>);"> 删除</a>
 							<% } %>
@@ -98,7 +100,7 @@
 						$('.comment_list').html(' ')
 						$.each(msg,function(i,val){
 							//console.log(val.content)
-							_comment += '<div class=\"cmt_lists\"><div class=\"cmt_content\">'+ val.content +'<span class=\"cmt_name\">from: '+ val.name ;
+							_comment += '<div class=\"cmt_lists\"><div class=\"cmt_content\">'+ val.content + '<span class=\"cmt_time\">'+ val.moment +'</span><span class=\"cmt_name\">By: '+ val.name ;
 								if (val.name == userName) {
 									_comment += '<a class=\"delete_comment\" href=\"javascript:delete_comment('+ val.id +');\"> 删除</a>'
 								}
@@ -142,16 +144,13 @@
 			if ($('textarea').val().trim() == '') {
 				fade('请输入评论！')
 			}else{
-				
 				$.ajax({
-					url: '/'+document.URL.slice(document.URL.lastIndexOf('/')+1),
+					url: '/' + location.pathname.split('/')[2],
 					data:$('.form').serialize(),
 					type: "POST",
 					cache: false,
 					dataType: 'json',
 					success: function (msg) {
-						
-						$('.submit').removeClass('disabled')
 						if (msg) {
 							fade('发表留言成功')							
 							setTimeout(()=>{

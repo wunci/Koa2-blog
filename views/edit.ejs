@@ -1,6 +1,6 @@
-<% include header %>
+<%- include("header",{type:''}) %>
 <div class="container">
-	<form class="form create" method="post">
+	<form style="width:100%" class="form create" method="post">
 		<div>
 			<label>标题：</label>
 			<input placeholder="标题" type="text" name="title" value="<%- postsTitle %>">
@@ -15,7 +15,7 @@
 <script>
 	$('.submit').click(()=>{
 		$.ajax({
-            url: document.URL,
+            url: '',
             data: $('.form').serialize(),
             type: "POST",
             cache: false,

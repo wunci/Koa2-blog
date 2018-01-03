@@ -45,7 +45,7 @@
 	<header>
 		<div class="user_name">
 			<% if(session.user){ %>
-				 Hello,<%- session.user %>
+				 Hello,<%= session.user %>
 			<% } %>
 			<% if(!session.user){ %>
 				欢迎注册登录^_^
@@ -56,18 +56,43 @@
 			<%  if(session.user){ %>
 				<div class="has_user">
 					<a target="__blank" href="https://github.com/wclimb/Koa2-blog">GitHub</a>
-					<a href="/posts">全部文章</a>
-					<a href="/posts?author=<%- session.user %>">我的文章</a>
-					<a href="/create">发表文章</a>
+					<% if(type == 'all'){ %>
+						<a class="active" href="/posts">全部文章</a>
+					<% }else{ %>
+						<a href="/posts">全部文章</a>
+					<% }%>
+					<% if(type == 'my'){ %>
+						<a class="active" href="/posts?author=<%= session.user %>">我的文章</a>
+					<% }else{ %>
+						<a href="/posts?author=<%= session.user %>">我的文章</a>
+					<% }%>
+					<% if(type == 'create'){ %>
+						<a class="active" href="/create">发表文章</a>
+					<% }else{ %>
+						<a href="/create">发表文章</a>
+					<% }%>
+					
 					<span class="signout">登出</span>
 				</div>
 			<% } %>
 			<% if(!session.user){ %>
 				<div class="none_user has_user">
 					<a target="__blank" href="https://github.com/wclimb/Koa2-blog">GitHub</a>
-					<a href="/posts">全部文章</a>
-					<a  href="/signup">注册</a>
-					<a href="/signin">登录</a>
+					<% if(type == 'all'){ %>
+						<a class="active" href="/posts">全部文章</a>
+					<% }else{ %>
+						<a href="/posts">全部文章</a>
+					<% }%>
+					<% if(type == 'signup'){ %>
+						<a class="active" href="/signup">注册</a>
+					<% }else{ %>
+						<a href="/signup">注册</a>
+					<% }%>
+					<% if(type == 'signin'){ %>
+						<a class="active" href="/signin">登录</a>
+					<% }else{ %>
+						<a href="/signin">登录</a>
+					<% }%>
 				</div>
 			<% } %>
 		</div>
