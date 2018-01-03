@@ -1,8 +1,8 @@
-var router = require('koa-router')();
-var userModel = require('../lib/mysql.js')
-var md5 = require('md5')
-var checkNotLogin = require('../middlewares/check.js').checkNotLogin
-var checkLogin = require('../middlewares/check.js').checkLogin
+const router = require('koa-router')();
+const userModel = require('../lib/mysql.js')
+const md5 = require('md5')
+const checkNotLogin = require('../middlewares/check.js').checkNotLogin
+const checkLogin = require('../middlewares/check.js').checkLogin
 
 router.get('/signin', async(ctx, next) => {
     await checkNotLogin(ctx)
@@ -13,12 +13,12 @@ router.get('/signin', async(ctx, next) => {
 
 router.post('/signin', async(ctx, next) => {
     console.log(ctx.request.body)
-    var name = ctx.request.body.name;
-    var pass = ctx.request.body.password;
+    let name = ctx.request.body.name;
+    let pass = ctx.request.body.password;
 
     await userModel.findDataByName(name)
         .then(result => {
-            var res = result
+            let res = result
             if (name === res[0]['name'] && md5(pass) === res[0]['pass']) {
                 ctx.body = true
                 ctx.session.user = res[0]['name']

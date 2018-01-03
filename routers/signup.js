@@ -1,25 +1,25 @@
-var router = require('koa-router')();
-var userModel = require('../lib/mysql.js');
-var md5 = require('md5')
-var checkNotLogin = require('../middlewares/check.js').checkNotLogin
-var checkLogin = require('../middlewares/check.js').checkLogin
-    // 注册页面
+const router = require('koa-router')();
+const userModel = require('../lib/mysql.js');
+const md5 = require('md5')
+const checkNotLogin = require('../middlewares/check.js').checkNotLogin
+const checkLogin = require('../middlewares/check.js').checkLogin
+// 注册页面
 router.get('/signup', async(ctx, next) => {
-        await checkNotLogin(ctx)
-        await ctx.render('signup', {
-            session: ctx.session,
-        })
+    await checkNotLogin(ctx)
+    await ctx.render('signup', {
+        session: ctx.session,
     })
+})
     // post 注册
 router.post('/signup', async(ctx, next) => {
     console.log(ctx.request.body)
-    var user = {
+    let user = {
         name: ctx.request.body.name,
         pass: ctx.request.body.password,
         repeatpass: ctx.request.body.repeatpass
     }
     await userModel.findDataByName(user.name)
-        .then(result => {
+        .then(async (result) => {
             console.log(result)
             if (result.length) {
                 try {
@@ -33,25 +33,21 @@ router.post('/signup', async(ctx, next) => {
                     data: 1
                 };;
                 
-            } else if (user.pass !== user.repeatpass || user.pass == '') {
+            } else if (user.pass !== user.repeatpass || user.pass === '') {
                 ctx.body = {
                     data: 2
                 };
-
             } else {
-                //注册成功
-                ctx.body = {
-                    data: 3
-                };
                 // ctx.session.user=ctx.request.body.name               
-                userModel.insertData([ctx.request.body.name, md5(ctx.request.body.password)])
+                await userModel.insertData([user.name, md5(user.pass)])
                     .then(res=>{
-                        console.log('注册成功')
+                        console.log('注册成功',res)
+                        //注册成功
+                        ctx.body = {
+                            data: 3
+                        };
                     })
             }
         })
-
 })
-
-
 module.exports = router

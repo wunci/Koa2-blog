@@ -1,17 +1,16 @@
-var router = require('koa-router')();
-var userModel = require('../lib/mysql.js')
-var moment = require('moment')
-var checkNotLogin = require('../middlewares/check.js').checkNotLogin
-var checkLogin = require('../middlewares/check.js').checkLogin;
-var TurndownService = require('turndown');
-var md = require('markdown-it')();  
+const router = require('koa-router')();
+const userModel = require('../lib/mysql.js')
+const moment = require('moment')
+const checkNotLogin = require('../middlewares/check.js').checkNotLogin
+const checkLogin = require('../middlewares/check.js').checkLogin;
+const md = require('markdown-it')();  
 // 重置到文章页
 router.get('/', async(ctx, next) => {
     ctx.redirect('/posts')
 })
 // 文章页
 router.get('/posts', async(ctx, next) => {
-    var res,
+    let res,
         postsLength,
         name = decodeURIComponent(ctx.request.querystring.split('=')[1]);
     if (ctx.request.querystring) {
@@ -51,9 +50,8 @@ router.get('/posts', async(ctx, next) => {
 
 // 首页分页，每次输出10条
 router.post('/posts/page', async(ctx, next) => {
-    var page = ctx.request.body.page;
-       
-     await userModel.findPostByPage(page)
+    let page = ctx.request.body.page;
+    await userModel.findPostByPage(page)
             .then(result=>{
                 //console.log(result)
                 ctx.body = result   
@@ -63,7 +61,7 @@ router.post('/posts/page', async(ctx, next) => {
 })
 // 个人文章分页，每次输出10条
 router.post('/posts/self/page', async(ctx, next) => {
-    var data = ctx.request.body
+    let data = ctx.request.body
     await userModel.findPostByUserPage(data.name,data.page)
             .then(result=>{
                 //console.log(result)
@@ -74,7 +72,7 @@ router.post('/posts/self/page', async(ctx, next) => {
 })
 // 单篇文章页
 router.get('/posts/:postId', async(ctx, next) => {
-    var comment_res,
+    let comment_res,
         res,
         pageOne,
         res_pv;
@@ -116,7 +114,7 @@ router.get('/create', async(ctx, next) => {
 
 // post 发表文章
 router.post('/create', async(ctx, next) => {
-    var title = ctx.request.body.title,
+    let title = ctx.request.body.title,
         content = ctx.request.body.content,
         id = ctx.session.id,
         name = ctx.session.user,
@@ -151,12 +149,11 @@ router.post('/create', async(ctx, next) => {
 
 // 发表评论
 router.post('/:postId', async(ctx, next) => {
-    var name = ctx.session.user,
+    let name = ctx.session.user,
         content = ctx.request.body.content,
         postId = ctx.params.postId,
         res_comments,
-        time = moment().format('YYYY-MM-DD HH:mm:ss')
-
+        time = moment().format('YYYY-MM-DD HH:mm:ss');
     await userModel.insertComment([name, md.render(content),time, postId])
     await userModel.findDataById(postId)
         .then(result => {
@@ -173,10 +170,9 @@ router.post('/:postId', async(ctx, next) => {
 
 // 编辑单篇文章页面
 router.get('/posts/:postId/edit', async(ctx, next) => {
-    var name = ctx.session.user,
+    let name = ctx.session.user,
         postId = ctx.params.postId,
-        res,
-        turndownService = new TurndownService()
+        res;
     await userModel.findDataById(postId)
         .then(result => {
             res = result[0]
@@ -192,7 +188,7 @@ router.get('/posts/:postId/edit', async(ctx, next) => {
 
 // post 编辑单篇文章
 router.post('/posts/:postId/edit', async(ctx, next) => {
-    var title = ctx.request.body.title,
+    let title = ctx.request.body.title,
         content = ctx.request.body.content,
         id = ctx.session.id,
         postId = ctx.params.postId,
@@ -219,29 +215,26 @@ router.post('/posts/:postId/edit', async(ctx, next) => {
         }).catch(() => {
             ctx.body = false
         })
-
-
 })
 
 // 删除单篇文章
 router.post('/posts/:postId/remove', async(ctx, next) => {
-        var postId = ctx.params.postId
-        await userModel.deleteAllPostComment(postId)
-        await userModel.deletePost(postId)
-            .then(() => {
-                ctx.body = {
-                    data: 1
-                }
-            }).catch(() => {
-                ctx.body = {
-                    data: 2
-                }
-            })
-
-    })
+    let postId = ctx.params.postId
+    await userModel.deleteAllPostComment(postId)
+    await userModel.deletePost(postId)
+        .then(() => {
+            ctx.body = {
+                data: 1
+            }
+        }).catch(() => {
+            ctx.body = {
+                data: 2
+            }
+        })
+})
 // 删除评论
 router.post('/posts/:postId/comment/:commentId/remove', async(ctx, next) => {
-    var postId = ctx.params.postId,
+    let postId = ctx.params.postId,
         commentId = ctx.params.commentId,
         res_comments;
     await userModel.findDataById(postId)
@@ -263,11 +256,10 @@ router.post('/posts/:postId/comment/:commentId/remove', async(ctx, next) => {
             }
 
         })
-
 })
 // 评论分页
 router.post('/posts/:postId/commentPage', async function(ctx){
-    var postId = ctx.params.postId,
+    let postId = ctx.params.postId,
         page = ctx.request.body.page;
     await userModel.findCommentByPage(page,postId)
         .then(res=>{

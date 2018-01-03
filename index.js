@@ -1,14 +1,14 @@
-var Koa=require('koa');
-var path=require('path')
-var bodyParser = require('koa-bodyparser');
-var ejs=require('ejs');
-var session = require('koa-session-minimal');
-var MysqlStore = require('koa-mysql-session');
-var config = require('./config/default.js');
-var router=require('koa-router')
-var views = require('koa-views')
-var koaStatic = require('koa-static')
-var app = new Koa()
+const Koa=require('koa');
+const path=require('path')
+const bodyParser = require('koa-bodyparser');
+const ejs=require('ejs');
+const session = require('koa-session-minimal');
+const MysqlStore = require('koa-mysql-session');
+const config = require('./config/default.js');
+const router=require('koa-router')
+const views = require('koa-views')
+const koaStatic = require('koa-static')
+const app = new Koa()
 
 
 // session存储配置
