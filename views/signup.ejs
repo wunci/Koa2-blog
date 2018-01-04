@@ -13,6 +13,12 @@
 				<label>重复密码：</label> 
 				<input placeholder="请确认密码" class="repeatpass" type="password" name="repeatpass">
 			</div>
+			<div>
+				<label>上传头像：</label>
+				<input type="file" name="avator" id="avator">
+				<input type="hidden" id="avatorVal">
+				<img class="preview" alt="预览头像">
+			</div>
 			<div class="submit">注册</div>
 		</form>
 		
@@ -24,16 +30,45 @@
 				$('.submit').click()
 			}
 		})
+		$('#avator').change(function(){
+			if (this.files.length != 0) {
+				var file = this.files[0],
+					reader = new FileReader();
+				if (!reader) {
+					this.value = '';
+					return;
+				};
+				console.log(file.size)
+				if (file.size >= 1024 * 1024 / 2) {
+					fade("请上传小于512kb的图片!")
+					return 
+				}
+				reader.onload = function (e) {
+					this.value = '';
+					$('form .preview').attr('src', e.target.result)
+					$('form .preview').fadeIn()
+					$('#avatorVal').val(e.target.result)
+				};
+				reader.readAsDataURL(file);
+			};
+		})
 		$('.submit').click(()=>{
 			// console.log($('.form').serialize())
 			if ($('input[name=name]').val().trim() == '') {
-				fade('请输入用户名')
+				fade('请输入用户名！')
 			}else if($('input[name=name]').val().match(/[<'">]/g)){
-				fade('请输入合法字符')
+				fade('请输入合法字符！')
+			}else if($('#avatorVal').val() == ''){
+				fade('请上传头像！')
 			}else{
 				$.ajax({
 					url: "/signup",
-					data: $('.form').serialize(),
+					data: {
+						name: $('input[name=name]').val(),
+						password: $('input[name=password]').val(),
+						repeatpass: $('input[name=repeatpass]').val(),
+						avator: $('#avatorVal').val(),
+					},
 					type: "POST",
 					cache: false,
 					dataType: 'json',

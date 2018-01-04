@@ -75,7 +75,7 @@ router.get('/posts/:postId', async(ctx, next) => {
     let comment_res,
         res,
         pageOne,
-        res_pv;
+        res_pv; 
     await userModel.findDataById(ctx.params.postId)
         .then(result => {
             //console.log(result )
@@ -119,6 +119,7 @@ router.post('/create', async(ctx, next) => {
         id = ctx.session.id,
         name = ctx.session.user,
         time = moment().format('YYYY-MM-DD HH:mm:ss'),
+        avator,
         // 现在使用markdown不需要单独转义
         newContent = content.replace(/[<">']/g, (target) => { 
             return {
@@ -138,7 +139,12 @@ router.post('/create', async(ctx, next) => {
         });
 
     //console.log([name, newTitle, content, id, time])
-    await userModel.insertPost([name, newTitle, md.render(content), content, id, time])
+    await userModel.findUserData(ctx.session.user)
+        .then(res => {
+            console.log(res[0]['avator'])
+            avator = res[0]['avator']       
+        })
+    await userModel.insertPost([name, newTitle, md.render(content), content, id, time,avator])
             .then(() => {
                 ctx.body = true
             }).catch(() => {
@@ -153,8 +159,14 @@ router.post('/:postId', async(ctx, next) => {
         content = ctx.request.body.content,
         postId = ctx.params.postId,
         res_comments,
-        time = moment().format('YYYY-MM-DD HH:mm:ss');
-    await userModel.insertComment([name, md.render(content),time, postId])
+        time = moment().format('YYYY-MM-DD HH:mm:ss'),
+        avator;
+    await userModel.findUserData(ctx.session.user)
+        .then(res => {
+            console.log(res[0]['avator'])
+            avator = res[0]['avator']
+        })   
+    await userModel.insertComment([name, md.render(content),time, postId,avator])
     await userModel.findDataById(postId)
         .then(result => {
             res_comments = parseInt(result[0]['comments'])
@@ -181,7 +193,7 @@ router.get('/posts/:postId/edit', async(ctx, next) => {
     await ctx.render('edit', {
         session: ctx.session,
         postsContent: res.md,
-        postsTitle:  res.title
+        postsTitle: res.title
     })
 
 })

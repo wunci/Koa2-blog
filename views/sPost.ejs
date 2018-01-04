@@ -12,7 +12,7 @@
 				</div>
 				<a href="/posts/<%= posts.id %>">
 					<div class="title">
-						<span>#<%= posts.id %></span>
+						<img class="userAvator" src="../images/<%= posts.avator %>.png">
 						<%= posts.title %>
 					</div>
 					<div class="content markdown">
@@ -52,11 +52,14 @@
 			<% pageOne.forEach(function(res){ %>
 				<div class="cmt_lists">
 					<div class="cmt_content">
-						<%- res['content'] %>
+						<div class="userMsg">
+							<img src="../images/<%= res['avator'] %>.png" alt=""><span><%= res['name'] %></span>
+						</div>
+						<div class="cmt_detail">
+							<%- res['content'] %>
+						</div>
 						<span class="cmt_time"><%= res['moment'] %></span>
 						<span class="cmt_name">
-
-							By: <%= res['name'] %>
 							<% if(session && session.user ===  res['name']){ %>
 								<a class="delete_comment" href="javascript:delete_comment(<%= res['id'] %>);"> 删除</a>
 							<% } %>
@@ -100,7 +103,7 @@
 						$('.comment_list').html(' ')
 						$.each(msg,function(i,val){
 							//console.log(val.content)
-							_comment += '<div class=\"cmt_lists\"><div class=\"cmt_content\">'+ val.content + '<span class=\"cmt_time\">'+ val.moment +'</span><span class=\"cmt_name\">By: '+ val.name ;
+							_comment += '<div class=\"cmt_lists\"><div class=\"cmt_content\"><div class=\"userMsg\"><img src = \"../images/'+ val.avator +'.png\" ><span>'+ val.name +'</span></div ><div class="cmt_detail">'+ val.content + '</div><span class=\"cmt_time\">'+ val.moment +'</span><span class=\"cmt_name\">';
 								if (val.name == userName) {
 									_comment += '<a class=\"delete_comment\" href=\"javascript:delete_comment('+ val.id +');\"> 删除</a>'
 								}

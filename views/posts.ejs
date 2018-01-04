@@ -13,7 +13,7 @@
 					</div>
 					<a href="/posts/<%= res.id %>">
 						<div class="title">
-							<span>#<%= res.id %></span>
+							<img class="userAvator" src="images/<%= res.avator %>.png">
 							<%= res.title %>
 						</div>
 						<div class="content markdown">
@@ -64,7 +64,7 @@
 									'</div>'+
 									'<a href=\"/posts/'+ val.id +'\">'+
 										'<div class=\"title\">'+
-											'<span>#'+ val.id +'</span>'+
+											'<img class="userAvator" src="images/'+ val.avator +'.png">'+
 											 val.title +
 										'</div>'+
 										'<div class=\"content\">'+
