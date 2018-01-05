@@ -58,7 +58,6 @@ $ cd Koa2-blog
 ```
 ```
 $ cnpm i supervisor -g
-
 ```
 ```
 $ cnpm i 
