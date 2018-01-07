@@ -86,9 +86,11 @@ header .user_name {
     position: absolute;
     left: 10px;
     bottom: 5px;
+    font-size:0;
 }
 .posts .author span{
     margin-right: 5px;
+    font-size: 16px;
 }
 .posts > li:hover {
     background: #f2f2f2;

@@ -13,8 +13,8 @@
 					</div>
 					<a href="/posts/<%= res.id %>">
 						<div class="title">
-							<img class="userAvator" src="images/<%= res.avator %>.png">
-							<%= res.title %>
+							<img class="userAvator" src="images/<%= res.avator %>" onerror="this.src='http://blog.wclimb.site/images/default.jpg'">
+							<%- res.title %>
 						</div>
 						<div class="content markdown">
 							<%- res.content %>
@@ -64,7 +64,7 @@
 									'</div>'+
 									'<a href=\"/posts/'+ val.id +'\">'+
 										'<div class=\"title\">'+
-											'<img class="userAvator" src="images/'+ val.avator +'.png">'+
+											'<img class="userAvator" src="images/'+ val.avator +'" onerror=\"this.src=\'http://blog.wclimb.site/images/default.jpg\'\">'+
 											 val.title +
 										'</div>'+
 										'<div class=\"content markdown\">'+

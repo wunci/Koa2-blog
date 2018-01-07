@@ -38,15 +38,26 @@
 					return;
 				};
 				console.log(file.size)
-				if (file.size >= 1024 * 1024 / 2) {
-					fade("请上传小于512kb的图片!")
-					return 
-				}
+				// if (file.size >= 1024 * 1024 / 2) {
+				// 	fade("请上传小于512kb的图片!")
+				// 	return 
+				// }
 				reader.onload = function (e) {
 					this.value = '';
 					$('form .preview').attr('src', e.target.result)
 					$('form .preview').fadeIn()
-					$('#avatorVal').val(e.target.result)
+					 var image = new Image();
+					 image.onload = function(){
+						 var canvas = document.createElement('canvas');
+						 var ctx = canvas.getContext("2d");
+						 canvas.width = 100;
+						 canvas.height = 100;
+						 ctx.clearRect(0, 0, 100, 100);
+						 ctx.drawImage(image, 0, 0, 100, 100);
+						 var blob = canvas.toDataURL("image/png");
+						 $('#avatorVal').val(blob)
+					 }
+					 image.src = e.target.result
 				};
 				reader.readAsDataURL(file);
 			};
@@ -73,7 +84,7 @@
 					dataType: 'json',
 					success: function (msg) {
 					   if (msg.data == 1) {           		
-						   $('input').val('')
+						   $('input[name=name]').val('')
 						   fade('用户名存在')
 					   }
 					   else if (msg.data == 2){
@@ -82,16 +93,17 @@
 					   else if(msg.data == 3){
 							fade('注册成功')
 							setTimeout(()=>{
-								window.location.href="/signin"	  
+								window.location.href = "/signin"	  
 							},1000)
-					   	}
+					   	} else if (msg.data == 4) {
+						   fade('头像上传失败')
+					   }
 					},
 					error: function () {
 						alert('异常');
-	
 					}
 				})			
 			}
-		})		
+		})	
 	</script>
 <% include footer %>
