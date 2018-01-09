@@ -107,6 +107,7 @@ router.get('/posts/:postId', async(ctx, next) => {
 
 // 发表文章页面
 router.get('/create', async(ctx, next) => {
+    await checkLogin(ctx)
     await ctx.render('create', {
         session: ctx.session,
     })
@@ -185,9 +186,13 @@ router.get('/posts/:postId/edit', async(ctx, next) => {
     let name = ctx.session.user,
         postId = ctx.params.postId,
         res;
+    await checkLogin(ctx)
     await userModel.findDataById(postId)
         .then(result => {
             res = result[0]
+            if(res.name !== ctx.session.user){
+                ctx.redirect('/posts')
+            }
             //console.log('修改文章', res)
         })
     await ctx.render('edit', {

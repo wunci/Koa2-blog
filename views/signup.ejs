@@ -37,11 +37,18 @@
 					this.value = '';
 					return;
 				};
-				console.log(file.size)
+				console.log(file.size,file.type)
 				// if (file.size >= 1024 * 1024 / 2) {
 				// 	fade("请上传小于512kb的图片!")
 				// 	return 
 				// }
+				if (!/image/g.test(file.type)) {
+					fade("请上传图片文件!")
+					$('#avatorVal').val('')
+					$('form .preview').attr('src', '')
+					$('form .preview').fadeOut()
+					return 
+				}
 				reader.onload = function (e) {
 					this.value = '';
 					$('form .preview').attr('src', e.target.result)
