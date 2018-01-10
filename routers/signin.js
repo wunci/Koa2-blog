@@ -31,9 +31,7 @@ router.post('/signin', async(ctx, next) => {
                 console.log('用户名或密码错误!')
             }
         }).catch(err => {
-            ctx.body = false
-            console.log('用户名或密码错误!')
-
+            console.log(err)
         })
 
 })
