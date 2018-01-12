@@ -151,7 +151,6 @@ router.post('/create', async(ctx, next) => {
             }).catch(() => {
                 ctx.body = false
             })
-
 })
 
 // 发表评论
@@ -190,10 +189,6 @@ router.get('/posts/:postId/edit', async(ctx, next) => {
     await userModel.findDataById(postId)
         .then(result => {
             res = result[0]
-            if(res.name !== ctx.session.user){
-                ctx.redirect('/posts')
-            }
-            //console.log('修改文章', res)
         })
     await ctx.render('edit', {
         session: ctx.session,
@@ -209,6 +204,7 @@ router.post('/posts/:postId/edit', async(ctx, next) => {
         content = ctx.request.body.content,
         id = ctx.session.id,
         postId = ctx.params.postId,
+        allowEdit = true;
          // 现在使用markdown不需要单独转义
         newTitle = title.replace(/[<">']/g, (target) => {
             return {
@@ -226,53 +222,96 @@ router.post('/posts/:postId/edit', async(ctx, next) => {
                 "'": '&#39;'
             }[target]
         });
-    await userModel.updatePost([newTitle, md.render(content), content, postId])
-        .then(() => {
-            ctx.body = true
-        }).catch(() => {
-            ctx.body = false
+    await userModel.findDataById(postId)
+        .then(res=>{
+            console.log(res[0].name,ctx.session.user)
+            if(res[0].name != ctx.session.user){
+                allowEdit = false
+            }else{
+                allowEdit = true
+            }
         })
+        if(allowEdit){
+            await userModel.updatePost([newTitle, md.render(content), content, postId])
+                .then(() => {
+                    ctx.body = true
+                }).catch(() => {
+                    ctx.body = false
+                })
+        }else{
+            ctx.body = 'error'
+        }
 })
 
 // 删除单篇文章
 router.post('/posts/:postId/remove', async(ctx, next) => {
-    let postId = ctx.params.postId
-    await userModel.deleteAllPostComment(postId)
-    await userModel.deletePost(postId)
-        .then(() => {
-            ctx.body = {
-                data: 1
-            }
-        }).catch(() => {
-            ctx.body = {
-                data: 2
+    let postId = ctx.params.postId,
+        allow;
+    await userModel.findDataById(postId)
+        .then(res=>{
+            console.log(res[0].name,ctx.session.user)
+            if(res[0].name != ctx.session.user){
+                allow = false
+            }else{
+                allow = true
             }
         })
+    if(allow){
+        await userModel.deleteAllPostComment(postId)
+        await userModel.deletePost(postId)
+            .then(() => {
+                ctx.body = {
+                    data: 1
+                }
+            }).catch(() => {
+                ctx.body = {
+                    data: 2
+                }
+            })
+    }else{
+        ctx.body = {
+            data: 3
+        }
+    }
 })
 // 删除评论
 router.post('/posts/:postId/comment/:commentId/remove', async(ctx, next) => {
     let postId = ctx.params.postId,
         commentId = ctx.params.commentId,
-        res_comments;
-    await userModel.findDataById(postId)
-        .then(result => {
-            res_comments = parseInt(result[0]['comments'])
-            //console.log('res', res_comments)
-            res_comments -= 1
-            //console.log(res_comments)
+        res_comments,
+        allow;
+    await userModel.findComment(commentId)
+        .then(res=>{
+            //console.log(res)
+            if(res[0].name != ctx.session.user){
+                allow = false
+            }else{
+                allow = true
+            }
         })
-    await userModel.updatePostComment([res_comments, postId])
-    await userModel.deleteComment(commentId)
-        .then(() => {
-            ctx.body = {
-                data: 1
-            }
-        }).catch(() => {
-            ctx.body = {
-                data: 2
-            }
+    if(allow){
+        await userModel.findDataById(postId)
+            .then(result => {
+                res_comments = parseInt(result[0]['comments'])
+                //console.log('res', res_comments)
+                res_comments -= 1
+                //console.log(res_comments)
+            })
+        await userModel.updatePostComment([res_comments, postId])
+        await userModel.deleteComment(commentId)
+            .then(() => {
+                ctx.body = {
+                    data: 1
+                }
+            }).catch(() => {
+                ctx.body = {
+                    data: 2
+                }
 
-        })
+            })
+    }else{
+        ctx.body = 3
+    }
 })
 // 评论分页
 router.post('/posts/:postId/commentPage', async function(ctx){
