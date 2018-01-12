@@ -21,15 +21,17 @@
             cache: false,
             dataType: 'json',
             success: function (msg) {
-               if (msg) {
+				if(msg == 'error' || !msg){
+					fade('修改失败')
+				}else if (msg) {
                		fade('修改成功')
                		setTimeout(()=>{
 	               		window.location.href = "/posts"
                		},1000)
-               }
+               	} 
             },
             error: function () {
-                alert('异常');
+                alert('服务器异常');
             }
         })		
 	})

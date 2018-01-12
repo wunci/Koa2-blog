@@ -121,11 +121,8 @@
 						setTimeout(() => {
 							window.location.href = "/posts"
 						}, 1000)
-					} else if (msg.data == 2) {
-						fade('删除文章失败');
-						setTimeout(() => {
-							window.location.reload()
-						}, 1000)
+					} else {
+						fade('删除文章失败')
 					}
 				}
 			})
@@ -171,12 +168,9 @@
 						setTimeout(() => {
 							window.location.reload()
 						}, 1000)
-					} else if (msg.data == 2) {
+					} else {
 						fade('删除留言失败');
-						setTimeout(() => {
-							window.location.reload()
-						}, 1500)
-					}
+					} 
 				},
 				error: function () {
 					alert('异常')
