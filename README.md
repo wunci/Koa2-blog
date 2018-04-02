@@ -1,7 +1,8 @@
-# Koa2-blog
+# Koa2-blog（有问题可以加qq群:725165362）
 node+koa2+mysql (欢迎star)
 
 > 现在最新的代码有变动，请参照最新的代码，新增了上传头像、分页、markdown语法等
+
 
 教程 [Node+Koa2+Mysql 搭建简易博客](http://www.wclimb.site/2017/07/12/Node-Koa2-Mysql-%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E5%8D%9A%E5%AE%A2/) 
 
