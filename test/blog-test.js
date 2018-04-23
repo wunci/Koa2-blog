@@ -4,7 +4,7 @@ var apiModel = require('../lib/mysql.js')
 describe('add User', function() {
 	// 创建一个用户
 	before((done) => {
-		apiModel.insertData(['wclimb','123456']).then(()=>{
+		apiModel.insertData(['wclimb','123456','avator','time']).then(()=>{
 			done()
 		});
 	});
