@@ -12,7 +12,7 @@
 				</div>
 				<a href="/posts/<%= posts.id %>">
 					<div class="title">
-						<img class="userAvator" src="../images/<%= posts.avator %>" onerror="this.src='http://blog.wclimb.site/images/default.jpg'">
+						<img class="userAvator" src="../images/<%= posts.avator %>" alt="avator">
 						<%- posts.title %>
 					</div>
 					<div class="content markdown">
@@ -44,7 +44,7 @@
 				<div class="cmt_lists">
 					<div class="cmt_content">
 						<div class="userMsg">
-							<img src="../images/<%= res['avator'] %>" onerror="this.src='http://blog.wclimb.site/images/default.jpg'"><span><%= res['name'] %></span>
+							<img src="../images/<%= res['avator'] %>" alt="avator"><span><%= res['name'] %></span>
 						</div>
 						<div class="cmt_detail">
 							<%- res['content'] %>
@@ -94,7 +94,7 @@
 						$('.comment_list').html(' ')
 						$.each(msg,function(i,val){
 							//console.log(val.content)
-							_comment += '<div class=\"cmt_lists\"><div class=\"cmt_content\"><div class=\"userMsg\"><img src = \"../images/'+ val.avator +'\" onerror=\"this.src=\'http://blog.wclimb.site/images/default.jpg\'\"><span>'+ val.name +'</span></div ><div class="cmt_detail">'+ val.content + '</div><span class=\"cmt_time\">'+ val.moment +'</span><span class=\"cmt_name\">';
+							_comment += '<div class=\"cmt_lists\"><div class=\"cmt_content\"><div class=\"userMsg\"><img src = \"../images/'+ val.avator +'\" alt=\"avator\"><span>'+ val.name +'</span></div ><div class="cmt_detail">'+ val.content + '</div><span class=\"cmt_time\">'+ val.moment +'</span><span class=\"cmt_name\">';
 								if (val.name == userName) {
 									_comment += '<a class=\"delete_comment\" href=\"javascript:delete_comment('+ val.id +');\"> 删除</a>'
 								}
