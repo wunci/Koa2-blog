@@ -55,6 +55,7 @@ router.post('/signup', async(ctx, next) => {
                         console.log('头像上传成功') 
                     });            
                 })
+                console.log('xxx',upload)
                 if (upload) {
                     await userModel.insertData([user.name, md5(user.pass), getName+'.png', moment().format('YYYY-MM-DD HH:mm:ss')])
                         .then(res=>{
