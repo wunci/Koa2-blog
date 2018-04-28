@@ -19,7 +19,7 @@
 				$('.submit').click()
 			}
 		})
-		$('.submit').click(()=>{
+		$('.submit').click(function(){
 			if ($('input[name=name]').val().trim() == '' || $('input[name=password]').val().trim() == '' ) {
 				fade('请输入用户名或密码')
 			}else{
@@ -31,12 +31,12 @@
 					cache: false,
 					dataType: 'json',
 					success: function (msg) {
-					    if (!msg) {
+					    if (msg.code != 200) {
 							$('input').val('')
 						    fade('用户名或密码错误')
 					    } else{
 						    fade('登录成功')
-						    setTimeout(()=>{
+						    setTimeout(function(){
 							    window.location.href = "/posts"
 						    },1500)	               	
 					    }

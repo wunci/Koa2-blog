@@ -19,7 +19,7 @@
 			},1500)
 		}
 		$(function(){
-			$('.signout').click(()=>{
+			$('.signout').click(function(){
 				$.ajax({
 					url: "/signout",
 					type: "GET",
@@ -28,8 +28,8 @@
 					success: function (msg) {
 						if (msg) {
 							fade('登出成功')
-							setTimeout(()=>{
-								window.location.href = "/posts"
+							setTimeout(function(){
+								location.href = "/posts"
 							},1500)	
 						}
 					},

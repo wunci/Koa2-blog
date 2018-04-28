@@ -13,7 +13,7 @@
 	</form>
 </div>
 <script>
-    $('.submit').click(()=>{
+    $('.submit').click(function(){
         if ($('input[name=title]').val().trim() == '') {
             fade('请输入标题')
         }else if ($('textarea').val().trim() == '') {
@@ -26,10 +26,10 @@
                 cache: false,
                 dataType: 'json',
                 success: function (msg) {
-                    if (msg) {
+                    if (msg.code == 200) {
                         fade('发表成功')
-                        setTimeout(()=>{
-                            window.location.href = "/posts"
+                        setTimeout(function(){
+                            location.href = "/posts"
                         },1000)
                     }else{
                         fade('发表失败')

@@ -69,7 +69,7 @@
 				reader.readAsDataURL(file);
 			};
 		})
-		$('.submit').click(()=>{
+		$('.submit').click(function(){
 			// console.log($('.form').serialize())
 			if ($('input[name=name]').val().trim() == '') {
 				fade('请输入用户名！')
@@ -99,7 +99,7 @@
 					   }
 					   else if(msg.data == 3){
 							fade('注册成功')
-							setTimeout(()=>{
+							setTimeout(function(){
 								window.location.href = "/signin"	  
 							},1000)
 					   	} else if (msg.data == 4) {

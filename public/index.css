@@ -313,7 +313,7 @@ input:hover,input:active,textarea:hover,textarea:active{
 
 .delete_comment:hover,
 .delete_post:hover,
-a:hover {
+.author a:hover {
     color: #ec5051;
 }
 .disabled{

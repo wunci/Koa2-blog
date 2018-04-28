@@ -13,7 +13,7 @@
 	</form>
 </div>
 <script>
-	$('.submit').click(()=>{
+	$('.submit').click(function(){
 		$.ajax({
             url: '',
             data: $('.form').serialize(),
@@ -21,11 +21,11 @@
             cache: false,
             dataType: 'json',
             success: function (msg) {
-				if(msg == 'error' || !msg){
+				if(msg.code != 200){
 					fade('修改失败')
 				}else if (msg) {
                		fade('修改成功')
-               		setTimeout(()=>{
+               		setTimeout(function (){
 	               		window.location.href = "/posts"
                		},1000)
                	} 
