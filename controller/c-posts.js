@@ -4,16 +4,20 @@ const moment = require('moment')
 const checkNotLogin = require('../middlewares/check.js').checkNotLogin
 const checkLogin = require('../middlewares/check.js').checkLogin;
 const md = require('markdown-it')();  
-
-exports.getRedirectPosts = async (ctx, next) => {
+/**
+ * 重置到文章页
+ */
+exports.getRedirectPosts = async ctx => {
     ctx.redirect('/posts')
 }
-exports.getPosts = async (ctx, next) => {
+/**
+ * 文章页
+ */
+exports.getPosts = async ctx => {
     let res,
         postsLength,
         name = decodeURIComponent(ctx.request.querystring.split('=')[1]);
     if (ctx.request.querystring) {
-        console.log('ctx.request.querystring', name)
         await userModel.findDataByUser(name)
             .then(result => {
                 postsLength = result.length
@@ -30,7 +34,6 @@ exports.getPosts = async (ctx, next) => {
     } else {
         await userModel.findPostByPage(1)
             .then(result => {
-                //console.log(result)
                 res = result
             })
         await userModel.findAllPost()
@@ -46,27 +49,34 @@ exports.getPosts = async (ctx, next) => {
         })
     }
 }
-exports.postPostsPage = async (ctx, next) => {
+/**
+ * 首页分页， 每次输出10条
+ */
+exports.postPostsPage = async ctx => {
     let page = ctx.request.body.page;
     await userModel.findPostByPage(page)
         .then(result => {
-            //console.log(result)
             ctx.body = result
         }).catch(() => {
             ctx.body = 'error'
         })
 }
-exports.postSelfPage = async (ctx, next) => {
+/**
+ * 个人文章分页， 每次输出10条
+ */
+exports.postSelfPage = async ctx => {
     let data = ctx.request.body
     await userModel.findPostByUserPage(data.name, data.page)
         .then(result => {
-            //console.log(result)
             ctx.body = result
         }).catch(() => {
             ctx.body = 'error'
         })
 }
-exports.getSinglePosts = async (ctx, next) => {
+/**
+ * 单篇文章页
+ */
+exports.getSinglePosts = async ctx => {
     let postId = ctx.params.postId,
         comment_res,
         res,
@@ -74,22 +84,18 @@ exports.getSinglePosts = async (ctx, next) => {
         res_pv;
     await userModel.findDataById(postId)
         .then(result => {
-            //console.log(result )
             res = result
             res_pv = parseInt(result[0]['pv'])
             res_pv += 1
-            // console.log(res_pv)
         })
     await userModel.updatePostPv([res_pv, postId])
     await userModel.findCommentByPage(1, postId)
         .then(result => {
             pageOne = result
-            //console.log('comment', comment_res)
         })
     await userModel.findCommentById(postId)
         .then(result => {
             comment_res = result
-            //console.log('comment', comment_res)
         })
     await ctx.render('sPost', {
         session: ctx.session,
@@ -100,13 +106,19 @@ exports.getSinglePosts = async (ctx, next) => {
     })
 
 }
-exports.getCreate = async (ctx, next) => {
+/**
+ * 发表文章页面
+ */
+exports.getCreate = async ctx => {
     await checkLogin(ctx)
     await ctx.render('create', {
         session: ctx.session,
     })
 }
-exports.postCreate = async (ctx, next) => {
+/**
+ * 发表文章
+ */
+exports.postCreate = async ctx => {
     let {title,content} = ctx.request.body,
         id = ctx.session.id,
         name = ctx.session.user,
@@ -130,10 +142,8 @@ exports.postCreate = async (ctx, next) => {
             }[target]
         });
 
-    //console.log([name, newTitle, content, id, time])
     await userModel.findUserData(ctx.session.user)
         .then(res => {
-            console.log(res[0]['avator'])
             avator = res[0]['avator']
         })
     await userModel.insertPost([name, newTitle, md.render(content), content, id, time, avator])
@@ -149,8 +159,10 @@ exports.postCreate = async (ctx, next) => {
             }
         })
 }
-
-exports.postComment = async (ctx, next) => {
+/**
+ * 发表评论
+ */
+exports.postComment = async ctx => {
     let name = ctx.session.user,
         content = ctx.request.body.content,
         postId = ctx.params.postId,
@@ -159,7 +171,6 @@ exports.postComment = async (ctx, next) => {
         avator;
     await userModel.findUserData(ctx.session.user)
         .then(res => {
-            console.log(res[0]['avator'])
             avator = res[0]['avator']
         })
     await userModel.insertComment([name, md.render(content), time, postId, avator])
@@ -181,7 +192,10 @@ exports.postComment = async (ctx, next) => {
             }
         })
 }
-exports.getEditPage = async (ctx, next) => {
+/**
+ * 编辑单篇文章页面
+ */
+exports.getEditPage = async ctx => {
     let name = ctx.session.user,
         postId = ctx.params.postId,
         res;
@@ -197,7 +211,10 @@ exports.getEditPage = async (ctx, next) => {
     })
 
 }
-exports.postEditPage = async (ctx, next) => {
+/**
+ * post 编辑单篇文章
+ */
+exports.postEditPage = async ctx => {
     let title = ctx.request.body.title,
         content = ctx.request.body.content,
         id = ctx.session.id,
@@ -222,7 +239,6 @@ exports.postEditPage = async (ctx, next) => {
         });
     await userModel.findDataById(postId)
         .then(res => {
-            console.log(res[0].name, ctx.session.user)
             if (res[0].name != ctx.session.user) {
                 allowEdit = false
             } else {
@@ -249,12 +265,14 @@ exports.postEditPage = async (ctx, next) => {
         }
     }
 }
-exports.postDeletePost = async (ctx, next) => {
+/**
+ * 删除单篇文章
+ */
+exports.postDeletePost = async ctx => {
     let postId = ctx.params.postId,
         allow;
     await userModel.findDataById(postId)
         .then(res => {
-            console.log(res[0].name, ctx.session.user)
             if (res[0].name != ctx.session.user) {
                 allow = false
             } else {
@@ -282,14 +300,16 @@ exports.postDeletePost = async (ctx, next) => {
         }
     }
 }
-exports.postDeleteComment = async (ctx, next) => {
+/**
+ * 删除评论
+ */
+exports.postDeleteComment = async ctx => {
     let postId = ctx.params.postId,
         commentId = ctx.params.commentId,
         res_comments,
         allow;
     await userModel.findComment(commentId)
         .then(res => {
-            //console.log(res)
             if (res[0].name != ctx.session.user) {
                 allow = false
             } else {
@@ -300,9 +320,7 @@ exports.postDeleteComment = async (ctx, next) => {
         await userModel.findDataById(postId)
             .then(result => {
                 res_comments = parseInt(result[0]['comments'])
-                //console.log('res', res_comments)
                 res_comments -= 1
-                //console.log(res_comments)
             })
         await userModel.updatePostComment([res_comments, postId])
         await userModel.deleteComment(commentId)
@@ -325,6 +343,9 @@ exports.postDeleteComment = async (ctx, next) => {
         }
     }
 }
+/**
+ * 评论分页
+ */
 exports.postCommentPage = async function (ctx) {
     let postId = ctx.params.postId,
         page = ctx.request.body.page;

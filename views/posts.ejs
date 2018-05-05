@@ -1,5 +1,6 @@
 <%- include("header",{type:'all'}) %>
 	<div class="container">
+	<% if(posts.length > 0 ){  %>
 		<ul class="posts">
 			<% posts.forEach(function(res){ %>
 				<li>
@@ -23,6 +24,9 @@
 				</li>
 			<% }) %>
 		</ul>
+	<% }else{  %>
+		<p class="tips">暂时没有文章，快去前往发表吧</p>
+	<% } %>
 		<div style="margin-top: 30px" class="pagination" id="page"></div>	
 	</div>
 	<script src="/pagination.js"></script>

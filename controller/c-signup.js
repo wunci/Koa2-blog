@@ -5,14 +5,13 @@ const checkLogin = require('../middlewares/check.js').checkLogin
 const moment = require('moment');
 const fs = require('fs')
 
-exports.getSignup = async (ctx, next) => {
+exports.getSignup = async ctx => {
     await checkNotLogin(ctx)
     await ctx.render('signup', {
         session: ctx.session,
     })
 }
-exports.postSignup = async (ctx, next) => {
-    //console.log(ctx.request.body)
+exports.postSignup = async ctx => {
     let { name, password, repeatpass, avator } = ctx.request.body
     await userModel.findDataByName(name)
         .then(async (result) => {
@@ -26,19 +25,16 @@ exports.postSignup = async (ctx, next) => {
                 }
                 // 用户存在
                 ctx.body = {
-                    code: 200,
-                    data: 1,
+                    code: 500,
                     message: '用户存在'
                 };;
 
             } else if (password !== repeatpass || password === '') {
                 ctx.body = {
-                    code: 200,
-                    data: 2,
+                    code: 500,
                     message: '两次输入的密码不一致'
                 };
             } else {
-                // ctx.session.user=ctx.request.body.name   
                 let base64Data = avator.replace(/^data:image\/\w+;base64,/, "");
                 let dataBuffer = new Buffer(base64Data, 'base64');
                 let getName = Number(Math.random().toString().substr(3)).toString(36) + Date.now()
@@ -52,7 +48,7 @@ exports.postSignup = async (ctx, next) => {
                         console.log('头像上传成功')
                     });
                 })
-                console.log('xxx', upload)
+                console.log('upload', upload)
                 if (upload) {
                     await userModel.insertData([name, md5(password), getName + '.png', moment().format('YYYY-MM-DD HH:mm:ss')])
                         .then(res => {
@@ -60,15 +56,13 @@ exports.postSignup = async (ctx, next) => {
                             //注册成功
                             ctx.body = {
                                 code: 200,
-                                data: 3,
                                 message: '注册成功'
                             };
                         })
                 } else {
                     consol.log('头像上传失败')
                     ctx.body = {
-                        code: 200,
-                        data: 4,
+                        code: 500,
                         message: '头像上传失败'
                     }
                 }
