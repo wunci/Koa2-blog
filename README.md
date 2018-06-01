@@ -71,27 +71,27 @@ $ npm test(测试项目)
 ```
 ### 演示
 
-![](http://oswpupqu5.bkt.clouddn.com/blog1.gif)
+![](http://www.wclimb.site/cdn/blog1.gif)
 
 ### 注册
 
-![](http://oswpupqu5.bkt.clouddn.com/signup1.png)
+![](http://www.wclimb.site/cdn/signup1.png)
 
 ### 登陆
 
-![](http://oswpupqu5.bkt.clouddn.com/signin1.png)
+![](http://www.wclimb.site/cdn/signin1.png)
 
 ### 发表文章
 
-![](http://oswpupqu5.bkt.clouddn.com/create1.png)
+![](http://www.wclimb.site/cdn/create1.png)
 
 ### 文章详情
 
-![](http://oswpupqu5.bkt.clouddn.com/postcontent1.png)
+![](http://www.wclimb.site/cdn/postcontent1.png)
 
 ### 文章列表
 
-![](http://oswpupqu5.bkt.clouddn.com/posts1.png)
+![](http://www.wclimb.site/cdn/posts1.png)
 
 ### 个人文章页以及正常编辑删除文章和评论
 
