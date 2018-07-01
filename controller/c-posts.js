@@ -66,7 +66,7 @@ exports.postPostsPage = async ctx => {
  */
 exports.postSelfPage = async ctx => {
     let data = ctx.request.body
-    await userModel.findPostByUserPage(data.name, data.page)
+    await userModel.findPostByUserPage(decodeURIComponent(data.name), data.page)
         .then(result => {
             ctx.body = result
         }).catch(() => {
