@@ -131,6 +131,8 @@ header .user_name {
     margin: 10px 0 0 0 ;
     padding: 10px 0;
     margin-left: 40px;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 .userMsg img{
     width: 40px;

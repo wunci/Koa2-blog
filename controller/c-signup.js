@@ -35,19 +35,19 @@ exports.postSignup = async ctx => {
                     message: '两次输入的密码不一致'
                 };
             } else {
-                let base64Data = avator.replace(/^data:image\/\w+;base64,/, "");
-                let dataBuffer = new Buffer(base64Data, 'base64');
-                let getName = Number(Math.random().toString().substr(3)).toString(36) + Date.now()
-                let upload = await new Promise((reslove, reject) => {
-                    fs.writeFile('./public/images/' + getName + '.png', dataBuffer, err => {
-                        if (err) {
-                            throw err;
-                            reject(false)
-                        };
-                        reslove(true)
-                        console.log('头像上传成功')
+                let base64Data = avator.replace(/^data:image\/\w+;base64,/, ""),
+                    dataBuffer = new Buffer(base64Data, 'base64'),
+                    getName = Number(Math.random().toString().substr(3)).toString(36) + Date.now(),
+                    upload = await new Promise((reslove, reject) => {
+                        fs.writeFile('./public/images/' + getName + '.png', dataBuffer, err => {
+                            if (err) {
+                                throw err;
+                                reject(false)
+                            };
+                            reslove(true)
+                            console.log('头像上传成功')
+                        });
                     });
-                })
                 console.log('upload', upload)
                 if (upload) {
                     await userModel.insertData([name, md5(password), getName + '.png', moment().format('YYYY-MM-DD HH:mm:ss')])
@@ -60,7 +60,7 @@ exports.postSignup = async ctx => {
                             };
                         })
                 } else {
-                    consol.log('头像上传失败')
+                    console.log('头像上传失败')
                     ctx.body = {
                         code: 500,
                         message: '头像上传失败'
