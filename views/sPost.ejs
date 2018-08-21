@@ -38,7 +38,7 @@
 		<% } else{ %>
 			<p class="tips">登录之后才可以评论哟</p>
 		<% } %>
-		<% if (commentPageLenght > 0) { %>
+		<% if (commentPageLength > 0) { %>
 		<div class="comment_list markdown">
 			<% pageOne.forEach(function(res){ %>
 				<div class="cmt_lists">
@@ -69,7 +69,7 @@
 		var userName = "<%- session.user %>"
 		pagination({
 			selector: '#page',
-			totalPage: <%= commentPageLenght %>,
+			totalPage: <%= commentPageLength %>,
 			currentPage: 1,
 			prev: '上一页',
 			next: '下一页',

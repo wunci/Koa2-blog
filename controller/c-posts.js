@@ -15,12 +15,12 @@ exports.getRedirectPosts = async ctx => {
  */
 exports.getPosts = async ctx => {
     let res,
-        postsLength,
+        postCount,
         name = decodeURIComponent(ctx.request.querystring.split('=')[1]);
     if (ctx.request.querystring) {
-        await userModel.findDataByUser(name)
+        await userModel.findPostCountByName(name)
             .then(result => {
-                postsLength = result.length
+                postCount = result[0].count
             })
         await userModel.findPostByUserPage(name, 1)
             .then(result => {
@@ -29,22 +29,22 @@ exports.getPosts = async ctx => {
         await ctx.render('selfPosts', {
             session: ctx.session,
             posts: res,
-            postsPageLength: Math.ceil(postsLength / 10),
+            postsPageLength: Math.ceil(postCount / 10),
         })
     } else {
         await userModel.findPostByPage(1)
             .then(result => {
                 res = result
             })
-        await userModel.findAllPost()
+        await userModel.findAllPostCount()
             .then(result => {
-                postsLength = result.length
+                postCount = result[0].count
             })
         await ctx.render('posts', {
             session: ctx.session,
             posts: res,
-            postsLength: postsLength,
-            postsPageLength: Math.ceil(postsLength / 10),
+            postsLength: postCount,
+            postsPageLength: Math.ceil(postCount / 10),
 
         })
     }
@@ -78,30 +78,27 @@ exports.postSelfPage = async ctx => {
  */
 exports.getSinglePosts = async ctx => {
     let postId = ctx.params.postId,
-        comment_res,
+        count,
         res,
-        pageOne,
-        res_pv;
+        pageOne;
     await userModel.findDataById(postId)
         .then(result => {
             res = result
-            res_pv = parseInt(result[0]['pv'])
-            res_pv += 1
         })
-    await userModel.updatePostPv([res_pv, postId])
+    await userModel.updatePostPv(postId)
     await userModel.findCommentByPage(1, postId)
         .then(result => {
             pageOne = result
         })
-    await userModel.findCommentById(postId)
+    await userModel.findCommentCountById(postId)
         .then(result => {
-            comment_res = result
+            count = result[0].count
         })
     await ctx.render('sPost', {
         session: ctx.session,
         posts: res[0],
-        commentLenght: comment_res.length,
-        commentPageLenght: Math.ceil(comment_res.length / 10),
+        commentLength: count,
+        commentPageLength: Math.ceil(count / 10),
         pageOne: pageOne
     })
 
@@ -166,7 +163,6 @@ exports.postComment = async ctx => {
     let name = ctx.session.user,
         content = ctx.request.body.content,
         postId = ctx.params.postId,
-        res_comments,
         time = moment().format('YYYY-MM-DD HH:mm:ss'),
         avator;
     await userModel.findUserData(ctx.session.user)
@@ -174,12 +170,7 @@ exports.postComment = async ctx => {
             avator = res[0]['avator']
         })
     await userModel.insertComment([name, md.render(content), time, postId, avator])
-    await userModel.findDataById(postId)
-        .then(result => {
-            res_comments = parseInt(result[0]['comments'])
-            res_comments += 1
-        })
-    await userModel.updatePostComment([res_comments, postId])
+    await userModel.addPostCommentCount(postId)
         .then(() => {
             ctx.body = {
                 code:200,
@@ -306,7 +297,6 @@ exports.postDeletePost = async ctx => {
 exports.postDeleteComment = async ctx => {
     let postId = ctx.params.postId,
         commentId = ctx.params.commentId,
-        res_comments,
         allow;
     await userModel.findComment(commentId)
         .then(res => {
@@ -317,12 +307,7 @@ exports.postDeleteComment = async ctx => {
             }
         })
     if (allow) {
-        await userModel.findDataById(postId)
-            .then(result => {
-                res_comments = parseInt(result[0]['comments'])
-                res_comments -= 1
-            })
-        await userModel.updatePostComment([res_comments, postId])
+        await userModel.reducePostCommentCount(postId)
         await userModel.deleteComment(commentId)
             .then(() => {
                 ctx.body = {

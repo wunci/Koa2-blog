@@ -13,26 +13,25 @@ exports.getSignup = async ctx => {
 }
 exports.postSignup = async ctx => {
     let { name, password, repeatpass, avator } = ctx.request.body
-    await userModel.findDataByName(name)
+    console.log(typeof password)
+    await userModel.findDataCountByName(name)
         .then(async (result) => {
             console.log(result)
-            if (result.length) {
-                try {
-                    throw Error('用户已经存在')
-                } catch (error) {
-                    //处理err
-                    console.log(error)
-                }
+            if (result[0].count >= 1) {
                 // 用户存在
                 ctx.body = {
                     code: 500,
                     message: '用户存在'
-                };;
-
-            } else if (password !== repeatpass || password === '') {
+                };
+            } else if (password !== repeatpass || password.trim() === '') {
                 ctx.body = {
                     code: 500,
                     message: '两次输入的密码不一致'
+                };
+            } else if(avator && avator.trim() === ''){
+                ctx.body = {
+                    code: 500,
+                    message: '请上传头像'
                 };
             } else {
                 let base64Data = avator.replace(/^data:image\/\w+;base64,/, ""),
@@ -48,7 +47,7 @@ exports.postSignup = async ctx => {
                             console.log('头像上传成功')
                         });
                     });
-                console.log('upload', upload)
+                // console.log('upload', upload)
                 if (upload) {
                     await userModel.insertData([name, md5(password), getName + '.png', moment().format('YYYY-MM-DD HH:mm:ss')])
                         .then(res => {
