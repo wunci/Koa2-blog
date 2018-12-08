@@ -1,34 +1,44 @@
 {
-  "name": "koa2-blog",
-  "version": "1.0.0",
-  "description": "blog",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "name": "koa",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "supervisor --harmony index",
-    "test": "./node_modules/mocha/bin/mocha --harmony test"
+    "start": "node bin/www",
+    "dev": "./node_modules/.bin/nodemon bin/www",
+    "prd": "pm2 start bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "wclimb",
-  "license": "MIT",
   "dependencies": {
+    "captchapng": "0.0.1",
+    "ccap": "^0.6.10",
     "config-lite": "^2.0.0",
+    "debug": "^2.6.3",
     "ejs": "^2.5.6",
-    "koa": "^2.3.0",
-    "koa-bodyparser": "^4.2.0",
+    "gd-bmp": "^1.2.4",
+    "koa": "^2.2.0",
+    "koa-bodyparser": "^3.2.0",
+    "koa-convert": "^1.2.0",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^2.0.1",
     "koa-mysql-session": "^0.0.2",
-    "koa-router": "^7.2.1",
+    "koa-onerror": "^1.2.1",
+    "koa-router": "^7.1.1",
     "koa-session-minimal": "^3.0.4",
-    "koa-static": "^4.0.0",
+    "koa-static": "^3.0.0",
     "koa-static-cache": "^5.1.1",
-    "koa-views": "^6.0.2",
+    "koa-views": "^5.2.1",
+    "koa2-ueditor": "^1.0.1",
     "markdown-it": "^8.4.0",
     "md5": "^2.2.1",
     "moment": "^2.18.1",
-    "mysql": "^2.13.0"
+    "mysql": "^2.13.0",
+    "nodemailer": "^4.7.0",
+    "sleep": "^5.2.3",
+    "ueditor": "^1.2.3",
+    "ueditor-backend": "^1.0.15"
   },
   "devDependencies": {
+    "nodemon": "^1.8.1",
     "chai": "^4.1.2",
     "mocha": "^4.0.1"
   }

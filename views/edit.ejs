@@ -1,39 +1,53 @@
 <%- include("header",{type:''}) %>
-<div class="container">
-	<form style="width:100%" class="form create" method="post">
-		<div>
-			<label>标题：</label>
-			<input placeholder="标题" type="text" name="title" value="<%- postsTitle %>">
-		</div>
-		<div>
-			<label>内容：</label>
-			<textarea name="content" id="" cols="42" rows="10"><%= postsContent %></textarea>
-		</div>
-		<div class="submit">修改</div>
-	</form>
+<div class="container" style="padding-left:350px;">
+    <form style="width:100%" class="form create" method="post">
+        <div>
+            <label>标题：</label>
+            <input placeholder="标题" type="text" name="title" value="<%- postsTitle %>">
+        </div>
+        <div>
+            <label>内容：</label>
+        
+            <script id="editor" type="text/plain" name="content" style="width:850px;height:300px;">
+                
+            </script>
+        </div>
+        <div class="submit">修改</div>
+    </form>
 </div>
 <script>
-	$('.submit').click(function(){
-		$.ajax({
+var ue = UE.getEditor('editor',{
+
+    toolbars: [
+         ['source','bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc','insertcode']
+    ],
+ });
+ ue.ready(function() {
+
+    //设置编辑器的内容
+    ue.setContent('<%- postsContent %>');
+   
+});
+    $('.submit').click(function(){
+        $.ajax({
             url: '',
             data: $('.form').serialize(),
             type: "POST",
             cache: false,
             dataType: 'json',
             success: function (msg) {
-				if(msg.code != 200){
-					fade('修改失败')
-				}else if (msg) {
-               		fade('修改成功')
-               		setTimeout(function (){
-	               		window.location.href = "/posts"
-               		},1000)
-               	} 
+                if(msg.code != 200){
+                    fade('修改失败')
+                }else if (msg) {
+                    fade('修改成功')
+                    setTimeout(function (){
+                        window.location.href = "/posts"
+                    },1000)
+                } 
             },
             error: function () {
                 alert('服务器异常');
             }
-        })		
-	})
+        })      
+    })
 </script>
-<% include footer %>

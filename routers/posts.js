@@ -28,4 +28,9 @@ router.post('/posts/:postId/comment/:commentId/remove', controller.postDeleteCom
 // 评论分页
 router.post('/posts/:postId/commentPage', controller.postCommentPage)
 
+//个人拓展功能,新增搜索功能
+router.get('/search',controller.getSearch)
+router.post('/search/page',controller.postSearchPage)
+
+
 module.exports = router

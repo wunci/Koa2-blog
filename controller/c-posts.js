@@ -1,9 +1,10 @@
-
 const userModel = require('../lib/mysql.js')
 const moment = require('moment')
-const checkNotLogin = require('../middlewares/check.js').checkNotLogin
+// const checkNotLogin = require('../middlewares/check.js').checkNotLogin
 const checkLogin = require('../middlewares/check.js').checkLogin;
 const md = require('markdown-it')();  
+const tools = require('../lib/util.js')
+
 /**
  * 重置到文章页
  */
@@ -28,6 +29,7 @@ exports.getPosts = async ctx => {
             })
         await ctx.render('selfPosts', {
             session: ctx.session,
+            url:ctx.url,
             posts: res,
             postsPageLength: Math.ceil(postCount / 10),
         })
@@ -42,18 +44,21 @@ exports.getPosts = async ctx => {
             })
         await ctx.render('posts', {
             session: ctx.session,
+            url:ctx.url,
             posts: res,
             postsLength: postCount,
             postsPageLength: Math.ceil(postCount / 10),
-
         })
     }
+    console.log('nowUrl:'+ctx.url)
+
 }
 /**
  * 首页分页， 每次输出10条
  */
 exports.postPostsPage = async ctx => {
     let page = ctx.request.body.page;
+    
     await userModel.findPostByPage(page)
         .then(result => {
             ctx.body = result
@@ -95,6 +100,7 @@ exports.getSinglePosts = async ctx => {
             count = result[0].count
         })
     await ctx.render('sPost', {
+        url:ctx.url,
         session: ctx.session,
         posts: res[0],
         commentLength: count,
@@ -109,6 +115,7 @@ exports.getSinglePosts = async ctx => {
 exports.getCreate = async ctx => {
     await checkLogin(ctx)
     await ctx.render('create', {
+        url:ctx.url,
         session: ctx.session,
     })
 }
@@ -122,28 +129,14 @@ exports.postCreate = async ctx => {
         time = moment().format('YYYY-MM-DD HH:mm:ss'),
         avator,
         // 现在使用markdown不需要单独转义
-        newContent = content.replace(/[<">']/g, (target) => {
-            return {
-                '<': '&lt;',
-                '"': '&quot;',
-                '>': '&gt;',
-                "'": '&#39;'
-            }[target]
-        }),
-        newTitle = title.replace(/[<">']/g, (target) => {
-            return {
-                '<': '&lt;',
-                '"': '&quot;',
-                '>': '&gt;',
-                "'": '&#39;'
-            }[target]
-        });
-
+        newContent = content,
+        newTitle = title;
+    console.log([name, newTitle, content, id, time])
     await userModel.findUserData(ctx.session.user)
         .then(res => {
             avator = res[0]['avator']
         })
-    await userModel.insertPost([name, newTitle, md.render(content), content, id, time, avator])
+    await userModel.insertPost([name, newTitle,  newContent, id, time, avator])
         .then(() => {
             ctx.body = {
                 code:200,
@@ -156,6 +149,98 @@ exports.postCreate = async ctx => {
             }
         })
 }
+
+/**
+ * 搜索文章
+ * 
+ */
+exports.getSearch = async ctx => {
+
+    // let data = ctx.query;
+    // let keywords = data.keywords;
+    // let page = data.page || 1;
+    // let postCount=0;
+
+    // await userModel.findSearchresultCount()
+    // .then(result => {
+    //     postCount = result[0].count;
+    //     console.log('----');
+    // })
+
+    // await userModel.findPostBykeywordsPage(decodeURIComponent(keywords), page)
+    // .then(result => {
+    //     result.forEach(function(item) {
+    //         item.content = tools.delHtmlTag(item.content);
+    //         item.content = tools.cutString(item.content,50,'...')
+    //     })
+    //     res = result;
+    //     console.log(res.content);
+    // })
+    // await ctx.render('search', {
+    //     searchlist: res,
+    //     postsPageLength: Math.ceil(postCount / 10),
+    // })
+    
+
+//    let data = ctx.request.body;
+//    let page = ctx.query.page || 1;
+//    console.log(ctx.query);
+//     await userModel.findPostBykeywordsPage(decodeURIComponent(ctx.query.keywords), page)
+//     .then(result => {
+//         ctx.body = result
+//     }).catch(() => {
+//         ctx.body = 'error'
+//     })
+   
+let data = ctx.request.body
+let res,
+        postCount,
+        searchType=ctx.query.type,
+        keywords = ctx.query.keywords;
+        let page = data.page || 1;
+        console.log('gjc:'+ctx.query.keywords);
+        await userModel.findSearchresultCount(searchType,keywords)
+        .then(result => {
+            postCount = result[0].count
+        })
+        await await userModel.findPostBykeywordsPage(searchType,decodeURIComponent(keywords), page)
+            .then(result => {
+                // res = result
+                result.forEach(function(item) {
+                    item.content = tools.delHtmlTag(item.content);
+                    item.content = tools.cutString(item.content,50,'...')
+                })
+                res = result;
+            })
+        await ctx.render('search', {
+            session: ctx.session,
+            url:ctx.url,
+            searchlist: res,
+            totalCount:postCount,
+            searchType:searchType,
+            keywords:keywords,
+            postsPageLength: Math.ceil(postCount / 10),
+        })
+}
+
+
+exports.postSearchPage = async ctx => {
+    let page = ctx.request.body.page;
+    let keywords = ctx.request.body.keywords;
+    let searchType = ctx.request.body.searchType;
+    console.log(keywords);
+    await userModel.findPostBykeywordsPage(searchType,decodeURIComponent(keywords), page)
+        .then(result => {
+            result.forEach(function(item) {
+                item.content = tools.delHtmlTag(item.content);
+                item.content = tools.cutString(item.content,50,'...')
+            })
+            ctx.body = result
+        }).catch(() => {
+            ctx.body = 'error'
+        })
+}
+
 /**
  * 发表评论
  */
@@ -169,7 +254,7 @@ exports.postComment = async ctx => {
         .then(res => {
             avator = res[0]['avator']
         })
-    await userModel.insertComment([name, md.render(content), time, postId, avator])
+    await userModel.insertComment([name, content, time, postId, avator])
     await userModel.addPostCommentCount(postId)
         .then(() => {
             ctx.body = {
@@ -197,7 +282,8 @@ exports.getEditPage = async ctx => {
         })
     await ctx.render('edit', {
         session: ctx.session,
-        postsContent: res.md,
+        url:ctx.url,
+        postsContent: res.content,
         postsTitle: res.title
     })
 
@@ -237,7 +323,7 @@ exports.postEditPage = async ctx => {
             }
         })
     if (allowEdit) {
-        await userModel.updatePost([newTitle, md.render(content), content, postId])
+        await userModel.updatePost([newTitle, content, postId])
             .then(() => {
                 ctx.body = {
                     code: 200,
