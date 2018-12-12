@@ -2,11 +2,9 @@ body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
 a {
   color: #00b7ff;
 }
-
 body,
 header,
 ul,
@@ -747,6 +745,47 @@ table th[class*="col-"] {
   overflow-x: auto;
 }
 
+.markdown table {
+  width:80%;
+  border: 1px solid #d0d0d0;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown table th,
+.markdown table td {
+  border: 1px solid #d0d0d0;;
+
+}
+
+.markdown table th { 
+  border-bottom: 1px solid #848484; 
+  text-align: left; 
+  padding: 6px 20px;
+}
+
+.markdown table td {
+  border-bottom: 1px solid #d0d0d0; 
+  padding: 6px 20px;
+}
+
+.markdown .expire-tips {
+  padding: 5px 10px;
+  font-size: 15px;
+  border: 1px solid #e2e2e2;
+  background-color: #ffffc0;
+  border-left: 5px solid #fff000;
+  color: #333;
+}
+
+.markdown .aliyun-tips {
+  padding: 5px 10px;
+  font-size: 15px;
+  border: 1px solid #e2e2e2;
+  background-color:#f0f8f4;
+    border-left: 5px solid #7cc4a0;
+}
+
 #ulist img.face {
   width: 30px;
   height: 30px;
@@ -871,5 +910,5 @@ table th[class*="col-"] {
 /**用户列表页面loading效果**/
 
 .bd_index{position:relative;}
-.loading{display:none;color:red;font-weight:bold;background: url('../images/load.gif') no-repeat center center;}
+.loading{display:none;color:red;font-weight:bold;background: url('../images/ico_loading.gif') no-repeat center center;}
 .loading h2{background:none;margin-top:50px;line-height:320px;font-size:16px;font-weight:bold;font-family:"Microsoft YaHei";}

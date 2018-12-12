@@ -7,31 +7,33 @@
         </div>
         <div>
             <label>内容：</label>
-        
-            <script id="editor" type="text/plain" name="content" style="width:850px;height:300px;">
-                
-            </script>
+
+             <textarea name="editor" id="editor" >
+                <%- postsMd || postsContent %>
+	        </textarea>
+ 
         </div>
         <div class="submit">修改</div>
     </form>
 </div>
+<script src="/javascripts/mditor.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-var ue = UE.getEditor('editor',{
 
-    toolbars: [
-         ['source','bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc','insertcode']
-    ],
- });
- ue.ready(function() {
-
-    //设置编辑器的内容
-    ue.setContent('<%- postsContent %>');
-   
-});
+ var mditor = new Mditor("#editor",{
+            width:860,
+			height:400,
+			fixedHeight:true
+		});
+		mditor.openPreview();
     $('.submit').click(function(){
         $.ajax({
             url: '',
-            data: $('.form').serialize(),
+            data: {
+                title:$('input[name=title]').val(),
+                content:marked($("#editor").val()),
+                md:$("#editor").val()
+            },
             type: "POST",
             cache: false,
             dataType: 'json',

@@ -107,6 +107,9 @@
                 fade('请输入合法字符！')
             }else if($('#avatorVal').val() == ''){
                 fade('请上传头像！')
+            }else if($('input[name=code]').val().trim()!== $("#verify").val()){
+                console.log($('input[name=code]').val().trim());
+                fade('验证码不正确')
             }else{
                 $.ajax({
                     url: "/signup",

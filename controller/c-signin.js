@@ -8,7 +8,7 @@ var fs = require("fs");
 var BMP24 = require("gd-bmp").BMP24;
 // var captchapng = require('captchapng');
 
-const ccap = require("ccap")();
+// const ccap = require("ccap")();
 
 exports.getSignin = async ctx => {
   await checkNotLogin(ctx);

@@ -5,10 +5,11 @@
     <title>koa2-blog</title>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+
     <% if(session.user){ %>
-    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
-    <script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"> </script>
+    
+    <link rel="stylesheet" href="/stylesheets/mditor.min.css" />
+
     <% } %>  
     <script>
         function fade(txt){
@@ -58,7 +59,7 @@
 </head>
 <body>
     <header>
-                <% if(session.user){ %>
+            <% if(session.user){ %>
             <div class="user_name">
                 <% }else{ %>
             <div class="unlogin user_name">

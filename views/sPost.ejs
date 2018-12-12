@@ -33,7 +33,9 @@
         <% if(session.user){ %>
         <form class="form" method="post" action="/<%= posts.id %>">
 
-            <script id="editor" type="text/plain" name="content" style="width:1160px;height:300px;"></script>
+             <textarea name="editor" id="editor" >
+
+	        </textarea>
             <div class="submit">发表留言</div>
         </form>
         <% } else{ %>
@@ -78,20 +80,17 @@
 
         </div> 
     </div>
-<script src="/javascripts/SimplePagination.js">
-</script>
+    <script src="/javascripts/mditor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/javascripts/SimplePagination.js"></script>
 <script>
-    var userName = "<%- session.user %>" || "";
-    <% if(session.user){ %>
-
-        // var userName = "<%- session.user %>"
-        var ue = UE.getEditor('editor',{
-            toolbars: [
-                ['source','bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc','insertcode']
-            ],
-        });
-
-    <% } %>
+   var userName = "<%- session.user %>" || "";
+   var mditor = new Mditor("#editor",{
+            width:'100%',
+			height:400,
+			fixedHeight:true
+		});
+		mditor.openPreview();
 
     // 有评论的时候再去初始化分页,否则会报错
     <% if(commentPageLength){ %>
@@ -166,13 +165,17 @@
             console.log("test");
                 if (!isAllow) return
                 isAllow = false
-                if (ue.getContent() == '') {
+                if (document.getElementById("editor").value == '') {
                     fade('请输入评论！')
                     isAllow = true
                 }else{
                     $.ajax({
                         url: '/' + location.pathname.split('/')[2],
-                        data:$('.form').serialize(),
+                        // data:$('.form').serialize(),
+                        data:{
+                            content:marked($("#editor").val()),
+                            md:$("#editor").val()
+                        },
                         type: "POST",
                         cache: false,
                         dataType: 'json',

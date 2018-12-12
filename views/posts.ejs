@@ -68,9 +68,10 @@
                 cache: false,
                 success: function (msg) {
                     console.log(msg)
-                    if (msg != 'error') {
+                    var dataList = msg.postList;
+                    if (msg.code === 0) {
                         $('.posts').html(' ')
-                        $.each(msg,function(i,val){
+                        $.each(dataList,function(i,val){
                             //console.log(val.content)
                             $('.posts').append(
                                 '<li>'+

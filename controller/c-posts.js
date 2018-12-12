@@ -1,6 +1,5 @@
 const userModel = require('../lib/mysql.js')
 const moment = require('moment')
-// const checkNotLogin = require('../middlewares/check.js').checkNotLogin
 const checkLogin = require('../middlewares/check.js').checkLogin;
 const md = require('markdown-it')();  
 const tools = require('../lib/util.js')
@@ -58,12 +57,19 @@ exports.getPosts = async ctx => {
  */
 exports.postPostsPage = async ctx => {
     let page = ctx.request.body.page;
-    
     await userModel.findPostByPage(page)
         .then(result => {
-            ctx.body = result
+            ctx.body ={
+                code:0,
+                message:"成功",
+                postList:result
+            }
         }).catch(() => {
-            ctx.body = 'error'
+            // ctx.body = 'error'
+            ctx.body = {
+                "code": 1,
+                "message": "失败"
+            }
         })
 }
 /**
@@ -123,7 +129,7 @@ exports.getCreate = async ctx => {
  * 发表文章
  */
 exports.postCreate = async ctx => {
-    let {title,content} = ctx.request.body,
+    let {title,content,md} = ctx.request.body,
         id = ctx.session.id,
         name = ctx.session.user,
         time = moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -136,7 +142,10 @@ exports.postCreate = async ctx => {
         .then(res => {
             avator = res[0]['avator']
         })
-    await userModel.insertPost([name, newTitle,  newContent, id, time, avator])
+    // await userModel.insertPost([name, newTitle,  newContent, id, time, avator])
+    // let _sql = "insert into posts set name=?,title=?,content=?,uid=?,moment=?,avator=?;"
+    await userModel.insertPost([name, newTitle, content,md, id, time, avator])
+
         .then(() => {
             ctx.body = {
                 code:200,
@@ -235,7 +244,12 @@ exports.postSearchPage = async ctx => {
                 item.content = tools.delHtmlTag(item.content);
                 item.content = tools.cutString(item.content,50,'...')
             })
-            ctx.body = result
+            // ctx.body = result
+            ctx.body = {
+                code:0,
+                message:"成功",
+                resultList:result
+            }
         }).catch(() => {
             ctx.body = 'error'
         })
@@ -247,6 +261,7 @@ exports.postSearchPage = async ctx => {
 exports.postComment = async ctx => {
     let name = ctx.session.user,
         content = ctx.request.body.content,
+        md = ctx.request.body.md,
         postId = ctx.params.postId,
         time = moment().format('YYYY-MM-DD HH:mm:ss'),
         avator;
@@ -254,7 +269,7 @@ exports.postComment = async ctx => {
         .then(res => {
             avator = res[0]['avator']
         })
-    await userModel.insertComment([name, content, time, postId, avator])
+    await userModel.insertComment([name, content,md, time, postId, avator])
     await userModel.addPostCommentCount(postId)
         .then(() => {
             ctx.body = {
@@ -284,6 +299,7 @@ exports.getEditPage = async ctx => {
         session: ctx.session,
         url:ctx.url,
         postsContent: res.content,
+        postsMd:res.md,
         postsTitle: res.title
     })
 
@@ -294,6 +310,7 @@ exports.getEditPage = async ctx => {
 exports.postEditPage = async ctx => {
     let title = ctx.request.body.title,
         content = ctx.request.body.content,
+        md = ctx.request.body.md,
         id = ctx.session.id,
         postId = ctx.params.postId,
         allowEdit = true,
@@ -323,7 +340,7 @@ exports.postEditPage = async ctx => {
             }
         })
     if (allowEdit) {
-        await userModel.updatePost([newTitle, content, postId])
+        await userModel.updatePost([newTitle, content,md, postId])
             .then(() => {
                 ctx.body = {
                     code: 200,
