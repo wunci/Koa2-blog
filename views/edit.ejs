@@ -1,39 +1,55 @@
 <%- include("header",{type:''}) %>
-<div class="container">
-	<form style="width:100%" class="form create" method="post">
-		<div>
-			<label>标题：</label>
-			<input placeholder="标题" type="text" name="title" value="<%- postsTitle %>">
-		</div>
-		<div>
-			<label>内容：</label>
-			<textarea name="content" id="" cols="42" rows="10"><%= postsContent %></textarea>
-		</div>
-		<div class="submit">修改</div>
-	</form>
+<div class="container" style="width:860px;">
+    <form style="width:100%" class="form create" method="post">
+        <div>
+            <label>标题：</label>
+            <input placeholder="标题" type="text" name="title" value="<%- postsTitle %>">
+        </div>
+        <div>
+            <label>内容：</label>
+
+             <textarea name="editor" id="editor" >
+                <%- postsMd || postsContent %>
+	        </textarea>
+ 
+        </div>
+        <div class="submit">修改</div>
+    </form>
 </div>
+<script src="/javascripts/mditor.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-	$('.submit').click(function(){
-		$.ajax({
+
+ var mditor = new Mditor("#editor",{
+            width:860,
+			height:400,
+			fixedHeight:true
+		});
+		mditor.openPreview();
+    $('.submit').click(function(){
+        $.ajax({
             url: '',
-            data: $('.form').serialize(),
+            data: {
+                title:$('input[name=title]').val(),
+                content:marked($("#editor").val()),
+                md:$("#editor").val()
+            },
             type: "POST",
             cache: false,
             dataType: 'json',
             success: function (msg) {
-				if(msg.code != 200){
-					fade('修改失败')
-				}else if (msg) {
-               		fade('修改成功')
-               		setTimeout(function (){
-	               		window.location.href = "/posts"
-               		},1000)
-               	} 
+                if(msg.code != 200){
+                    fade('修改失败')
+                }else if (msg) {
+                    fade('修改成功')
+                    setTimeout(function (){
+                        window.location.href = "/posts"
+                    },1000)
+                } 
             },
             error: function () {
                 alert('服务器异常');
             }
-        })		
-	})
+        })      
+    })
 </script>
-<% include footer %>

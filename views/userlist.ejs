@@ -1,0 +1,149 @@
+<%- include("header",{type:'userlist'}) %>
+
+<div class="container userlist">
+  <h2><%- msg %></h2>
+  <div class="loading"></div>
+
+  <% if(userlist.length > 0 ){  %>
+  <table class="table" id="ulist">
+
+    <thead>
+      <tr class="active">
+        <th>用户ID</th>
+        <th>用户名</th>
+        <th>用户邮箱</th>
+        <th>用户图像</th>
+        <th>是否激活</th>
+        <th>注册时间</th>
+      </tr>
+    </thead>
+    <tbody class="userlistdata">
+
+     <% userlist.forEach(function(res,index){ %>
+        <% if(index%2 === 0 ){  %>
+        <tr>
+            <% }else{  %>
+           <tr class="active">        
+        <% } %>      
+
+        <td><%- res.id %></td>
+        <td><%- res.name %></td>
+        <td><%- res.email %></td>
+
+        <td>
+             <img class="userAvator face" src="../images/<%= res.avator %>"  alt="avator">
+             <span class="txt"><%- res.avator %></span>
+        </td>
+        <td>
+          <% if(res.status === 0 ){  %>
+                <font color="red">未激活</font>
+            <% }else{  %>
+                <font color="green">已激活</font>
+          <% } %>     
+           
+        </td>
+
+        <td><%- res.moment %></td>
+      </tr>
+
+      <% }) %>
+      
+    </tbody>
+  </table>
+
+     <% }else{  %>
+    <p class="tips">暂无数据</p>
+    <% } %>
+
+    <div class="page_list">
+
+            <div style="margin-top: 30px" class="pagination" id="page">
+            
+             </div>  
+                
+            <form action="" id="page-go">
+                <input type="text" id="page-num">
+                <input type="submit" id="goto" value="Go">
+            </form>
+     </div>
+
+<% include footer %>
+</div>
+
+
+
+<script src="/javascripts/SimplePagination.js" type="text/javascript" charset="utf-8">
+</script>
+
+<script>
+    let totalPage = <%= postsPageLength %>;
+    document.getElementById('page-num').value = 1;
+        const slp = new SimplePagination(totalPage)
+        slp.init({
+        container: '#page',
+        maxShowBtnCount: 3,
+        onPageChange: state => {
+            console.log('pagination change:', state.pageNumber)
+
+            document.getElementById('page-num').value = state.pageNumber;
+            
+            $.ajax({
+            url: "/userlist/page",
+            type: 'POST',
+            data:{
+                page: state.pageNumber,
+            },
+            cache: false,
+            beforeSend: function () {
+		       
+		       	$(".loading").css({"display":"block","margin":"100px auto","text-align":"center","height":"320px"});
+				$("#ulist").hide();
+		    },
+
+            success: function (msg) {
+                console.log(msg);
+                var dataList = msg.userList;
+                if (msg.code === 0) {
+                    // $('.posts').html(' ');
+                    $(".userlistdata").empty();
+
+                    $.each(dataList,function(i,val){
+                        var firstTr = '',statusStr='';
+                    
+                        i%2===0?firstTr = '<tr class="active">':firstTr = '<tr>'
+
+                        val.status===0?statusStr=' <font color="red">未激活</font>':statusStr=' <font color="green">已激活</font>'
+                        
+                        $('.userlistdata').append(
+                            firstTr+
+                            '<td>'+val.id +'</td>'+
+                            '<td>'+val.name +'</td>'+
+                            '<td>'+val.email +'</td>'+
+                            '<td><img class="userAvator face" src="../images/'+val.avator +'"  alt="avator">'+val.avator+'</td>'+
+                            '<td><span class="txt">'+statusStr +'</span></td>'+
+                            '<td><span class="txt">'+val.moment +'</span></td>'+
+                            '</tr>'
+                        )
+                    })
+                }else{
+                    alert(msg.message)
+                } 
+            },
+
+            complete: function () {
+               $("#ulist").show();
+		       $(".loading").css({"display":"none"});
+		    },
+
+        })
+             
+        
+            }
+        })
+        document.getElementById('page-go').addEventListener('submit', e => {
+            e.preventDefault()
+            slp.gotoPage(+document.getElementById('page-num').value)
+        })
+
+
+</script>

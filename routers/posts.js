@@ -1,31 +1,38 @@
-const router = require('koa-router')();
-const controller = require('../controller/c-posts')
+const router = require("koa-router")();
+const controller = require("../controller/c-posts");
 
 // 重置到文章页
-router.get('/', controller.getRedirectPosts)
+router.get("/", controller.getRedirectPosts);
 // 文章页
-router.get('/posts', controller.getPosts)
+router.get("/posts", controller.getPosts);
 // 首页分页，每次输出10条
-router.post('/posts/page', controller.postPostsPage)
+router.post("/posts/page", controller.postPostsPage);
 // 个人文章分页，每次输出10条
-router.post('/posts/self/page', controller.postSelfPage)
+router.post("/posts/self/page", controller.postSelfPage);
 // 单篇文章页
-router.get('/posts/:postId', controller.getSinglePosts)
+router.get("/posts/:postId", controller.getSinglePosts);
 // 发表文章页面
-router.get('/create', controller.getCreate)
+router.get("/create", controller.getCreate);
 // post 发表文章
-router.post('/create', controller.postCreate)
+router.post("/create", controller.postCreate);
 // 发表评论
-router.post('/:postId',controller.postComment)
+router.post("/posts/:postId", controller.postComment);
 // 编辑单篇文章页面
-router.get('/posts/:postId/edit', controller.getEditPage)
+router.get("/posts/:postId/edit", controller.getEditPage);
 // post 编辑单篇文章
-router.post('/posts/:postId/edit', controller.postEditPage)
+router.post("/posts/:postId/edit", controller.postEditPage);
 // 删除单篇文章
-router.post('/posts/:postId/remove', controller.postDeletePost)
+router.post("/posts/:postId/remove", controller.postDeletePost);
 // 删除评论
-router.post('/posts/:postId/comment/:commentId/remove', controller.postDeleteComment)
+router.post(
+  "/posts/:postId/comment/:commentId/remove",
+  controller.postDeleteComment
+);
 // 评论分页
-router.post('/posts/:postId/commentPage', controller.postCommentPage)
+router.post("/posts/:postId/commentPage", controller.postCommentPage);
 
-module.exports = router
+//个人拓展功能,新增搜索功能
+router.get("/search", controller.getSearch);
+router.post("/search/page", controller.postSearchPage);
+
+module.exports = router;

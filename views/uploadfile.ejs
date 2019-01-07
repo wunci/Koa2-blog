@@ -1,0 +1,110 @@
+<%- include("header",{type:''}) %>
+<div class="container">
+     <form class="form create" action="/uploadpic" method="post" enctype="multipart/form-data">
+        <div>
+            <label>标题：</label>
+            <input placeholder="标题" type="text" name="title" value="">
+        </div>
+
+        <div style="float:left;margin-top:10px;margin-bottom:30px;">
+           
+            <label for="photo" class="upload-img-btn" style="margin-left:0!important;">+上传图片</label>
+            <input type="file" name="file" id="photo">
+
+            <input type="hidden" id="photoVal">
+            <img class="preview" style="width:auto;height:auto;border-radius:0;top:20px;left:0;" alt="预览头像">
+
+        </div>
+
+        <div class="clearfix">
+            <label>图片描述：</label>
+             <textarea name="p_desc" id="editor" style="width:840px;"></textarea>
+ 
+        </div>
+        <div id="ptj" class="submit">提交</div>
+
+    </form>
+</div>
+
+
+<script>
+
+$('#photo').change(function(){
+            if (this.files.length != 0) {
+                var file = this.files[0],
+                    reader = new FileReader();
+                if (!reader) {
+                    this.value = '';
+                    return;
+                };
+                console.log(file)
+            
+                if (!/image/g.test(file.type)) {
+                    fade("请上传图片文件!")
+                    $('#photoVal').val('')
+                    $('form .preview').attr('src', '')
+                    $('form .preview').fadeOut()
+                    return 
+                }
+                reader.onload = function (e) {
+                    this.value = '';
+                    $('form .preview').attr('src', e.target.result)
+                    $('form .preview').fadeIn()
+                    // console.log(e.target.result.width);
+                     var image = new Image();
+                     
+                     image.onload = function(){
+                         var canvas = document.createElement('canvas');
+                         var ctx = canvas.getContext("2d");
+                         var imgW = image.width;
+                         var imgH = image.height;
+                         console.log(image.height);
+                         canvas.width = imgW;
+                         canvas.height = imgH;
+                         ctx.clearRect(0, 0, imgW, imgH);
+                         ctx.drawImage(image, 0, 0, imgW, imgH);
+                         var blob = canvas.toDataURL("image/png");
+                         $('#photoVal').val(blob)
+                     }
+                     image.src = e.target.result;
+                    
+                     
+                };
+                reader.readAsDataURL(file);
+            };
+        })
+ $('#ptj').click(function(){
+
+        if ($('input[name=title]').val().trim() == '') {
+            fade('请输入标题')
+        }else if ($('#editor').val().trim() == '') {
+            fade('请输入内容')
+        }else{          
+            $.ajax({
+                url: "/uploadpic",
+                data:{
+                    title:$('input[name=title]').val(),
+                    path:$("#photoVal").val(),
+                    content:$("#editor").val()
+                },
+                type: "POST",
+                cache: false,
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.code == 200) {
+                        fade('提交成功')
+                        debugger;
+                        setTimeout(function(){
+                            location.href = "/photolist"
+                        },1000)
+                    }else{
+                        fade('提交失败')
+                    }
+                },
+                error: function () {
+                    alert('异常');
+                }
+            })          
+        }   
+    })
+</script>
