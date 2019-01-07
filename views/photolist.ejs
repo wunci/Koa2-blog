@@ -1,0 +1,100 @@
+<%- include("header",{type:'photolist'}) %>
+
+<div class="container userlist">
+
+  <div class="loading"></div>
+
+
+    <a href="/upload"  class="uppic btn btn-large btn-block" style="width:30%;">+上传照片</a>
+
+    <div class="photo_content" id="container">
+	
+        <ul class="photoList">
+         <% posts.forEach(function(res){ %>
+            <li class="cell">
+                <a href="/photolist/Detail/<%= res.id %>"><img src="../uploads/<%= res.path %>" alt=""> <%= res.title  %></a>
+                <p><%= res.desccon  %></p>
+            </li> 
+           <% }) %>
+        </ul>
+
+        </div>
+    <nav class="navigation">	
+        <a id="photobutton" class="btn btn-large btn-block" type="button">加载更多内容~</a>
+    </nav>
+    
+<% include footer %>
+</div>
+
+</div>
+<script src="/javascripts/jquery.masonry.min.js"></script>
+<script type="text/javascript" >
+$(function(){
+    //瀑布流
+    var box = $('#container');
+    // initialize
+    box.masonry({
+        columnWidth: 243,
+        itemSelector: '.cell',
+        isAnimated:true
+    });
+    
+    box.imagesLoaded( function() {
+        box.masonry();
+    });
+
+    var cpage =2;
+    $("#photobutton").on("click",function(){
+        
+         $('#photobutton').html('<img src="http://www.ycku.com/wp-content/uploads/2014/01/loading.gif" alt="loading" />');
+         box.masonry('reload');
+         
+         $.ajax({
+                url: "/photolist/page",
+                type: 'POST',
+                data:{
+                    page: cpage
+                },
+                cache: false,
+                beforeSend:function(){
+                    
+                },
+                success: function (msg) {
+                    var dataList = msg.postList;
+                    console.log(cpage+'--'+msg.pageLength);
+                    if (dataList.length>0 && cpage<=msg.pageLength) {
+                        
+                        $.each(dataList,function(i,val){
+                            $('.photoList').append(
+                                '<li class="cell">'+
+                            '<a href="/photolist/Detail/'+val.id+'"><img src="../uploads/'+val.path+'" alt="">'+val.title +'</a>'+
+                            '<p>'+val.desccon +'</p>'+
+                                '</li>'
+                            )
+                        box.masonry('reload');
+
+                        })
+                        
+                        box.imagesLoaded( function() {
+                            box.masonry();
+                        });
+                        $('#photobutton').html('加载更多内容');
+                        
+                        dataList.length<10 && $(".navigation").hide();
+                        cpage++;
+                        
+                    }else{
+                       $(".navigation").hide();
+                    } 
+                },
+                complete:function(){
+                }
+            })
+        })
+        
+
+})
+</script>
+
+
+

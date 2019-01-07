@@ -1,99 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>koa2-blog</title>
-	<link rel="icon" href="http://www.wclimb.site/images/avatar.png">
-	<link rel="stylesheet" href="/index.css">
-	<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
-	<script>
-		function fade(txt){
-			$('.message').text(txt)
-			$('.message').animate({
-				top:0
-			})
-			setTimeout(function(){
-				$('.message').animate({
-					top: '-100%'
-				})
-			},1500)
-		}
-		$(function(){
-			$('.signout').click(function(){
-				$.ajax({
-					url: "/signout",
-					type: "GET",
-					cache: false,
-					dataType: 'json',
-					success: function (msg) {
-						if (msg) {
-							fade('登出成功')
-							setTimeout(function(){
-								location.href = "/posts"
-							},1500)	
-						}
-					},
-					error: function () {
-						alert('异常');
-					}
-				})
-			})
-		})
-	</script>
+    <meta charset="UTF-8">
+    <title>koa2-blog</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+     <link rel="icon" href="../images/logo.png">
+    <script src="http://test.901web.com/public/js/home/jquery-1.10.2.min.js"></script>
+    <% if(session.user){ %>
+    <link rel="stylesheet" href="/stylesheets/mditor.min.css" />
+    <% } %>  
+    <script>
+        function fade(txt){
+            $('.message').text(txt)
+            $('.message').animate({
+                top:0
+            })
+            setTimeout(function(){
+                $('.message').animate({
+                    top: '-100%'
+                })
+            },1500)
+        }
+        $(function(){
+            $('.signout').click(function(){
+                $.ajax({
+                    url: "/signout",
+                    type: "GET",
+                    cache: false,
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg) {
+                            fade('退出成功')
+                            setTimeout(function(){
+                                location.href = "/posts"
+                            },1500) 
+                        }
+                    },
+                    error: function () {
+                        alert('异常');
+                    }
+                })
+            })
+
+        })
+    </script>
 </head>
 <body>
-	<header>
-		<div class="user_name">
-			<% if(session.user){ %>
-				 Hello,<%= session.user %>
-			<% } %>
-			<% if(!session.user){ %>
-				欢迎注册登录^_^
-			<% } %>
-		</div>
-		<div class="message">登录成功</div>
-		<div class="user_right">
-			<%  if(session.user){ %>
-				<div class="has_user">
-					<a target="__blank" href="https://github.com/wclimb/Koa2-blog">GitHub</a>
-					<% if(type == 'all'){ %>
-						<a class="active" href="/posts">全部文章</a>
-					<% }else{ %>
-						<a href="/posts">全部文章</a>
-					<% }%>
-					<% if(type == 'my'){ %>
-						<a class="active" href="/posts?author=<%= session.user %>">我的文章</a>
-					<% }else{ %>
-						<a href="/posts?author=<%= session.user %>">我的文章</a>
-					<% }%>
-					<% if(type == 'create'){ %>
-						<a class="active" href="/create">发表文章</a>
-					<% }else{ %>
-						<a href="/create">发表文章</a>
-					<% }%>
-					
-					<span class="signout">登出</span>
-				</div>
-			<% } %>
-			<% if(!session.user){ %>
-				<div class="none_user has_user">
-					<a target="__blank" href="https://github.com/wclimb/Koa2-blog">GitHub</a>
-					<% if(type == 'all'){ %>
-						<a class="active" href="/posts">全部文章</a>
-					<% }else{ %>
-						<a href="/posts">全部文章</a>
-					<% }%>
-					<% if(type == 'signup'){ %>
-						<a class="active" href="/signup">注册</a>
-					<% }else{ %>
-						<a href="/signup">注册</a>
-					<% }%>
-					<% if(type == 'signin'){ %>
-						<a class="active" href="/signin">登录</a>
-					<% }else{ %>
-						<a href="/signin">登录</a>
-					<% }%>
-				</div>
-			<% } %>
-		</div>
-	</header>
+    <header>
+            <% if(session.user){ %>
+            <div class="user_name">
+                <% }else{ %>
+            <div class="unlogin user_name">
+                <% } %>    
+            
+                <% if(session.user){ %>
+                 <div class="fl userinfo">Hello,<%= session.user %></div>
+                <% } %>
+                <% if(!session.user){ %>
+                 <div class="fl userinfo">欢迎注册登录^_^</div>
+                <% } %>
+
+                <% if(url.split('?')[0] == '/posts' || url.split('?')[0] =='/search') { %>
+                <div class="fr search" >
+                    <form action="/search">
+                        <select name="type">
+                            <option value="article" selected = "selected">文章</option>
+                            <option value="users">会员</option>
+                        </select>
+                        <% if(keywords ){ %>
+                        <input type="text" name="keywords" value="<%- keywords %>" id="search-input">
+                        <% } else { %>
+
+                        <input type="text" name="keywords" value="" id="search-input">
+                        <% } %>
+                       
+                        <button type="submit" class="s-btn">搜索</button>
+                    </form>
+                </div>
+                <% } %>
+        </div>
+        <div class="message">登录成功</div>
+        <div class="user_right">
+            <%  if(session.user){ %>
+                <div class="has_user">
+                    <% if(type == 'all'){ %>
+                        <a class="active" href="/posts">全部文章</a>
+                    <% }else{ %>
+                        <a href="/posts">全部文章</a>
+                    <% }%>
+                    
+                    <% if(type == 'userlist'){ %>
+                        <a class="active" href="/userlist">会员列表</a>
+                    <% }else{ %>
+                        <a href="/userlist">会员列表</a>
+                    <% }%>
+
+                    <% if(type == 'photolist'){ %>
+                        <a class="active" href="/photolist">相册列表</a>
+                    <% }else{ %>
+                        <a href="/photolist">相册列表</a>
+                    <% }%>
+
+                    <% if(type == 'my'){ %>
+                        <a class="active" href="/posts?author=<%= session.user %>">我的文章</a>
+                    <% }else{ %>
+                        <a href="/posts?author=<%= session.user %>">我的文章</a>
+                    <% }%>
+                    <% if(type == 'create'){ %>
+                        <a class="active" href="/create">发表文章</a>
+                    <% }else{ %>
+                        <a href="/create">发表文章</a>
+                    <% }%>
+                    <span class="signout">退出</span>
+                </div>
+            <% } %>
+            <% if(!session.user){ %>
+                <div class="none_user has_user">
+                    <% if(type == 'all'){ %>
+                        <a class="active" href="/posts">全部文章</a>
+                    <% }else{ %>
+                        <a href="/posts">全部文章</a>
+                    <% }%>
+                    <% if(type == 'userlist'){ %>
+                        <a class="active" href="/userlist">会员列表</a>
+                    <% }else{ %>
+                        <a href="/userlist">会员列表</a>
+                    <% }%>
+
+                    <% if(type == 'photolist'){ %>
+                        <a class="active" href="/photolist">相册列表</a>
+                    <% }else{ %>
+                        <a href="/photolist">相册列表</a>
+                    <% }%>
+                    <% if(type == 'signup'){ %>
+                        <a class="active" href="/signup">注册</a>
+                    <% }else{ %>
+                        <a href="/signup">注册</a>
+                    <% }%>
+                    <% if(type == 'signin'){ %>
+                        <a class="active" href="/signin">登录</a>
+                    <% }else{ %>
+                        <a href="/signin">登录</a>
+                    <% }%>
+                </div>
+            <% } %>
+        </div>
+    </header>

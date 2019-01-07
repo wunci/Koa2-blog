@@ -1,23 +1,31 @@
-<%- include("header",{type:'signin'}) %>
+<%- include("header",{type:''}) %>
     <div class="container">
-        <form class="form create" method="post ">
+       <form class="form create" method="post ">
+        <h2>填写相关信息,重置您的登录密码:</h2>
             <div>
                 <label>用户名：</label> 
-                <input placeholder="用户名" type="text" name="name">
+               <input placeholder="用户名" type="text" name="name">
             </div>
             <div>
-                <label>密码：</label> 
-                <input placeholder="密码" type="password" name="password">
+                <label>邮箱地址：</label> 
+                <input placeholder="注册邮箱账号" type="text" name="email">
             </div>
-
+            <div>
+                <label>新密码：</label> 
+                <input placeholder="请输入密码" class="password" type="password" name="password">
+            </div>
+            <div>
+                <label>确认新密码：</label> 
+                <input placeholder="请确认密码" class="repeatpass" type="password" name="repeatpass">
+            </div>
             <div>
                 <label>验证码：</label> 
                 <input placeholder="请输入验证码" type="text" name="code" class="yzm">
                 <img class="code" src="" alt=""><span style="margin-left:10px;color:red;vertical-align:18px;">(看不清,点击刷新下,验证码不区分大小写!)</span>
                 <input type="hidden" value="" id="verify"/>
             </div>
-            <div class="submit">登录</div>
-            <p class="forgetpass"><a href="/forgetPass">忘记密码</a></p>
+            <div class="submit">提交</div>
+            <p class="forgetpass">填写邮箱提交,密码将会发送到你的邮箱,请注意查收!</p>
         </form>     
     </div>
 
@@ -33,35 +41,44 @@
                 $(".code").attr({src:msg.img})
                 }
             })
-
         }
-
         $(".code").on('click',function(){
             initVerify();
         })
-
         $('.submit').click(function(){
-            if ($('input[name=name]').val().trim() == '' || $('input[name=password]').val().trim() == '' ) {
-                fade('请输入用户名或密码')
+
+            if($('input[name=name]').val().trim() == '') {
+                fade('请输入用户名')
+            }else if ($('input[name=email]').val().trim() == '') {
+                fade('请输入注册的邮箱地址')
+            } else if($('input[name=password]').val().trim() == ''){
+                fade('请输入新的密码')
+            } else if($('input[name=repeatpass]').val() != $('input[name=password]').val()) {
+                fade('确认密码与新密码不一致')
             }else if($('input[name=code]').val().trim()!== $("#verify").val()){
                 fade('验证码不正确')
             }
             else{
                 console.log($('.form').serialize());
                 $.ajax({
-                    url: "/signin",
-                    data: $('.form').serialize(),
+                    url: "/forgetpass",
+                    data: {
+                        name:$('input[name=name]').val(),
+                        password:$('input[name=password]').val(),
+                        email:$('input[name=email]').val(),
+                        code:$('input[name=code]').val()
+                    },
                     type: "POST",
                     cache: false,
                     dataType: 'json',
                     success: function (msg) {
                         if (msg.code != 200) {
                             $('input').val('')
-                            fade('用户名或密码错误,或者账号未激活~')
+                            fade('填写信息有误,请核对~')
                         } else{
-                            fade('登录成功')
+                            fade('密码修改成功!')
                             setTimeout(function(){
-                                window.location.href = "/posts"
+                                window.location.href = "/sigin"
                             },1500)                 
                         }
                     },

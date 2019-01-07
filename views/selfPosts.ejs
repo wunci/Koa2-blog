@@ -1,86 +1,113 @@
 <%- include("header",{type:'my'}) %>
-	<div class="container">
-		<ul class="posts">
-			<% posts.forEach(function(res){ %>
-				<li>
-					<div class="author">
-						<span title="<%= res.name %>"><a href="/posts?author=<%= res.name %> ">author: <%= res.name %></a></span>
-						<span>评论数：<%= res.comments %></span>
-						<span>浏览量：<%= res.pv %></span>
-					</div>
-					<div class="comment_pv">
-						<span><%= res.moment %></span>
-					</div>
-					<a href="/posts/<%= res.id %>">
-						<div class="title">
-							<img class="userAvator" src="images/<%= res.avator %>"  alt="avator"> 
-							<%- res.title %>
-						</div>
-						<div class="content markdown">
-							<%- res.content %>
-						</div>
-					</a>
-				</li>
-			<% }) %>
-		</ul>
-		<div style="margin-top: 30px" class="pagination" id="page"></div>	
-	</div>
-	<script src="/pagination.js"></script>
-	<script>
-		pagination({
-			selector: '#page',
-			totalPage: <%= postsPageLength %>,
-			currentPage: 1,
-			prev: '上一页',
-			next: '下一页',
-			first: true,
-			last: true,
-			showTotalPage: true,
-			count: 2//当前页前后显示的数量
-		},function(val){
-			// 当前页
-			$.ajax({
-				url: "posts/self/page",
-				type: 'POST',
-				data:{
-					page: val,
-					name: location.search.slice(1).split('=')[1]
-				},
-				cache: false,
-				success: function (msg) {
-					//console.log(msg)
-					if (msg != 'error') {
-						$('.posts').html(' ')
-						$.each(msg,function(i,val){
-							//console.log(val.content)
-							$('.posts').append(
-								'<li>'+
-									'<div class=\"author\">'+
-										'<span title=\"'+ val.name +'\"><a href=\"/posts?author='+ val.name +' \">author: '+ val.name +'</a></span>'+
-										'<span>评论数：'+ val.comments +'</span>'+
-										'<span>浏览量：'+ val.pv +'</span>'+
-									'</div>'+
-									'<div class=\"comment_pv\">'+
-										'<span>'+ val.moment +'</span>'+
-									'</div>'+
-									'<a href=\"/posts/'+ val.id +'\">'+
-										'<div class=\"title\">'+
-											'<img class="userAvator" src="images/' + val.avator + '" alt=\"avator\">' +
-											 val.title +
-										'</div>'+
-										'<div class=\"content\">'+
-											 val.content +
-										'</div>'+
-									'</a>'+
-								'</li>'
-							)
-						})
-					}else{
-						alert('分页不存在')
-					} 
-				}
-			})
-		
-		})
-	</script>
-<% include footer %>
+    <div class="container">
+        <ul class="posts">
+            <% posts.forEach(function(res){ %>
+                <li>
+                    <div class="author">
+                        <span title="<%= res.name %>"><a href="/posts?author=<%= res.name %> ">author: <%= res.name %></a></span>
+                        <span>评论数：<%= res.comments %></span>
+                        <span>浏览量：<%= res.pv %></span>
+                    </div>
+                    <div class="comment_pv">
+                        <span><%= res.moment %></span>
+                    </div>
+                    <a href="/posts/<%= res.id %>">
+                        <div class="title">
+                            <img class="userAvator" src="images/<%= res.avator %>"  alt="avator"> 
+                            <%- res.title %>
+                        </div>
+                        <div class="content markdown">
+                            <%- res.content %>
+                        </div>
+                    </a>
+                </li>
+            <% }) %>
+        </ul>
+ 
+        <div class="page_list">
+
+            <div style="margin-top: 30px" class="pagination" id="page">
+            
+             </div>  
+                
+            <form action="" id="page-go">
+                <input type="text" id="page-num">
+                <input type="submit" id="goto" value="Go">
+            </form>
+        </div>
+
+          <% include footer %>
+    </div>
+
+     <script src="/javascripts/SimplePagination.js" type="text/javascript" charset="utf-8">
+    </script>
+
+    <script>
+
+    let totalPage = <%= postsPageLength %>;
+    if(totalPage>0) {
+
+        const slp = new SimplePagination(totalPage)
+    slp.init({
+    container: '#page',
+    maxShowBtnCount: 3,
+    onPageChange: state => {
+        console.log('pagination change:', state.pageNumber)
+            // 当前页
+                $.ajax({
+                    url: "posts/self/page",
+                    type: 'POST',
+                    data:{
+                        page: state.pageNumber,
+                        name: location.search.slice(1).split('=')[1]
+                    },
+                    cache: false,
+                    success: function (msg) {
+
+                        if (msg != 'error') {
+                            $('.posts').html(' ')
+                            $.each(msg,function(i,val){
+                                //console.log(val.content)
+                                $('.posts').append(
+                                    '<li>'+
+                                        '<div class=\"author\">'+
+                                            '<span title=\"'+ val.name +'\"><a href=\"/posts?author='+ val.name +' \">author: '+ val.name +'</a></span>'+
+                                            '<span>评论数：'+ val.comments +'</span>'+
+                                            '<span>浏览量：'+ val.pv +'</span>'+
+                                        '</div>'+
+                                        '<div class=\"comment_pv\">'+
+                                            '<span>'+ val.moment +'</span>'+
+                                        '</div>'+
+                                        '<a href=\"/posts/'+ val.id +'\">'+
+                                            '<div class=\"title\">'+
+                                                '<img class="userAvator" src="images/' + val.avator + '" alt=\"avator\">' +
+                                                val.title +
+                                            '</div>'+
+                                            '<div class=\"content\">'+
+                                                val.content +
+                                            '</div>'+
+                                        '</a>'+
+                                    '</li>'
+                                )
+                            })
+                        }else{
+                            alert('分页不存在')
+                        } 
+                    }
+                })
+            
+        }
+    })
+
+        document.getElementById('page-go').addEventListener('submit', e => {
+            e.preventDefault()
+            slp.gotoPage(+document.getElementById('page-num').value)
+        })
+    } else {
+
+
+        $(".container").html('<center style="color:red;padding-top:300px;">你暂时还没有发布文章,快去发布吧~</center>')
+
+    }
+    
+    </script>

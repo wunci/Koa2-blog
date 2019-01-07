@@ -1,0 +1,47 @@
+<%- include("header",{type:''}) %>
+    <div class="container">
+        <ul class="posts spost photoDetail">
+            <li>
+                <div class="author">
+                    <span title="<%= posts.name %>" >author: <%= posts.name %></span>
+                </div>
+                <div class="comment_pv">
+                    <span><%= posts.uploadtime %></span>
+                </div>
+                
+                    <div class="title">
+                       Title: <%- posts.title %>
+                    </div>
+                    <div class="content markdown">
+                        Desc:<%- posts.desccon %>
+                        <br/>
+                        <br/>
+                        <div>
+                        <img src="../../uploads/<%- posts.path %>" alt="">
+                        </div>
+                    </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="prev-next">
+        <% if(prevlink ){  %>
+        <a href="/photolist/Detail/<%= prevlink.id %>" class="prev">« 上一篇: <%- prevlink.title %></a>
+        <% } %>
+        <% if(nextlink ){  %>
+        <a href="/photolist/Detail/<%= nextlink.id %>" class="next">下一篇: <%- nextlink.title %> »</a>
+        <% } %>
+
+    </div>
+
+    <div class="container">
+    <% include footer %>
+    </div>
+     
+ 
+    <script src="/javascripts/mditor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/javascripts/SimplePagination.js"></script>
+<script>
+   var userName = "<%- session.user %>" || "";
+</script>
