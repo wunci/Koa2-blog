@@ -1,0 +1,132 @@
+<%- include("header",{type:'all'}) %>
+<div class="container">
+  <div class="search_res_tit">
+    <h2>
+      搜索结果 按
+      <strong style="color: red;">
+        <% if(searchType==='article' ){ %> 关键词 <% }else{ %> 用户名 <% } %>
+      </strong>
+      搜索
+    </h2>
+  </div>
+
+  <% if(searchType==='article' ){ %>
+  <p class="res_info">
+    搜索到 <%- totalCount %>条
+    <span class="key-words"><%- keywords %></span> 相关的数据
+  </p>
+
+  <% }else{ %>
+
+  <p class="res_info">
+    搜索到 用户 <span class="key-words"><%- keywords %></span> 发布文章为 <%-
+    totalCount %>条
+  </p>
+
+  <% } %> 
+  
+  <% if(searchlist.length > 0 ){ %>
+  <ul class="posts searchresult">
+    <% searchlist.forEach(function(res,index){ %>
+    <li>
+      <a href="/posts/<%= res.id %>">
+        <div class="title">
+          <h2>标题: <%- res.title %></h2>
+          <div class="others">
+            <i class="name"><%- res.name %></i>
+            <i class="name date"><%- res.moment %></i>
+          </div>
+        </div>
+        <div class="content"><%- res.content %></div>
+      </a>
+    </li>
+    <% }) %>
+  </ul>
+  <% }else{ %>
+  <center style="line-height:500px;color:red">没有搜索到相关数据</center>
+  <% } %>
+
+  <div class="page_list">
+
+            <div style="margin-top: 30px" class="pagination" id="page">
+            
+             </div>  
+                
+            <form action="" id="page-go">
+                <input type="text" id="page-num">
+                <input type="submit" id="goto" value="Go">
+            </form>
+     </div>
+</div>
+
+  
+
+<script
+  src="/javascripts/SimplePagination.js"
+  type="text/javascript"
+  charset="utf-8"
+></script>
+
+<script>
+
+   function getUrlParam(name) {
+              var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+              var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+              if (r != null) return unescape(r[2]); return null; //返回参数值
+      }
+
+let totalPage = <%= postsPageLength %>;
+ const slp = new SimplePagination(totalPage)
+slp.init({
+  container: '#page',
+  maxShowBtnCount: 3,
+  onPageChange: state => {
+    console.log('pagination change:', state.pageNumber)
+       // 当前页
+          $.ajax({
+              url: "/search/page",
+              type: 'POST',
+              data:{
+                  page: state.pageNumber,
+                  searchType:getUrlParam('type'),
+                  keywords:getUrlParam('keywords')
+              },
+              cache: false,
+              success: function (msg) {
+                  console.log(msg.resultList);
+                  var dataList = msg.resultList;
+                  if (msg.code === 0) {
+                      $('.posts').html(' ')
+                      $.each(dataList,function(i,val){
+                          //console.log(val.content)
+                          $('.posts').append(
+                              '<li>'+
+                                  '<a href=\"/posts/'+ val.id +'\">'+
+                                      '<div class=\"title\">'+
+                                          '<h2>'+val.title+'</h2>' +
+
+                                          '<div class="others">'+
+                                              '<i class="name">'+val.name+'</i>'+
+                                              '<i class="name date">'+val.moment+'</i>'+
+                                          '</div>'+
+                                      '</div>'+
+                                      '<div class=\"content markdown\">'+
+                                           val.content +
+                                      '</div>'+
+                                  '</a>'+
+                              '</li>'
+                          )
+                      })
+                  }else{
+                      alert('分页不存在')
+                  }
+              }
+          })
+    }
+})
+
+ document.getElementById('page-go').addEventListener('submit', e => {
+            e.preventDefault()
+            slp.gotoPage(+document.getElementById('page-num').value)
+        })
+</script>

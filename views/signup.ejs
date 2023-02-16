@@ -1,110 +1,145 @@
 <%- include("header",{type:'signup'}) %>
-	<div class="container">
-		<form class="form create" method="post">
-			<div>
-				<label>用户名：</label> 
-				<input placeholder="请输入用户名" type="text" name="name">
-			</div>
-			<div>
-				<label>密码：</label> 
-				<input placeholder="请输入密码" class="password" type="password" name="password">
-			</div>
-			<div>
-				<label>重复密码：</label> 
-				<input placeholder="请确认密码" class="repeatpass" type="password" name="repeatpass">
-			</div>
-			<div>
-				<label>上传头像：</label>
-				<input type="file" name="avator" id="avator">
-				<input type="hidden" id="avatorVal">
-				<img class="preview" alt="预览头像">
-			</div>
-			<div class="submit">注册</div>
-		</form>
-	</div>
-	<script>
-		$(window).keyup(function (e) {
-			//console.log(e.keyCode)
-			if (e.keyCode == 13) {
-				$('.submit').click()
-			}
-		})
-		$('#avator').change(function(){
-			if (this.files.length != 0) {
-				var file = this.files[0],
-					reader = new FileReader();
-				if (!reader) {
-					this.value = '';
-					return;
-				};
-				console.log(file.size,file.type)
-				// if (file.size >= 1024 * 1024 / 2) {
-				// 	fade("请上传小于512kb的图片!")
-				// 	return 
-				// }
-				if (!/image/g.test(file.type)) {
-					fade("请上传图片文件!")
-					$('#avatorVal').val('')
-					$('form .preview').attr('src', '')
-					$('form .preview').fadeOut()
-					return 
-				}
-				reader.onload = function (e) {
-					this.value = '';
-					$('form .preview').attr('src', e.target.result)
-					$('form .preview').fadeIn()
-					 var image = new Image();
-					 image.onload = function(){
-						 var canvas = document.createElement('canvas');
-						 var ctx = canvas.getContext("2d");
-						 canvas.width = 100;
-						 canvas.height = 100;
-						 ctx.clearRect(0, 0, 100, 100);
-						 ctx.drawImage(image, 0, 0, 100, 100);
-						 var blob = canvas.toDataURL("image/png");
-						 $('#avatorVal').val(blob)
-					 }
-					 image.src = e.target.result
-				};
-				reader.readAsDataURL(file);
-			};
-		})
-		$('.submit').click(function(){
-			// console.log($('.form').serialize())
-			if ($('input[name=name]').val().trim() == '') {
-				fade('请输入用户名！')
-			}else if($('input[name=name]').val().match(/[<'">]/g)){
-				fade('请输入合法字符！')
-			}else if($('#avatorVal').val() == ''){
-				fade('请上传头像！')
-			}else{
-				$.ajax({
-					url: "/signup",
-					data: {
-						name: $('input[name=name]').val(),
-						password: $('input[name=password]').val(),
-						repeatpass: $('input[name=repeatpass]').val(),
-						avator: $('#avatorVal').val(),
-					},
-					type: "POST",
-					cache: false,
-					dataType: 'json',
-					success: function (msg) {
-					   if(msg.code == 200){
-						   fade('注册成功')
-						   setTimeout(function(){
-							   window.location.href = "/signin"	  
-						   },1000)
+    <div class="container">
+        <form class="form create" method="post">
 
-					   }else{
- 							fade(msg.message)
-					   }
-					},
-					error: function () {
-						alert('异常');
-					}
-				})			
-			}
-		})	
-	</script>
-<% include footer %>
+            <div>
+                <label for="avator" class="upload-img-btn">+上传图片</label>
+                <input type="file" name="avator" id="avator">
+                <input type="hidden" id="avatorVal">
+                <img class="preview" alt="预览头像">
+            </div>
+            <div>
+                <label>用户名：</label> 
+                <input placeholder="请输入用户名" type="text" name="name">
+            </div>
+
+            <div>
+                <label>邮箱：</label> 
+                <input placeholder="请输入邮箱" type="text" name="email">
+            </div>
+
+            <div>
+                <label>密码：</label> 
+                <input placeholder="请输入密码" class="password" type="password" name="password">
+            </div>
+            <div>
+                <label>重复密码：</label> 
+                <input placeholder="请确认密码" class="repeatpass" type="password" name="repeatpass">
+            </div>
+
+            <div>
+                <label>验证码：</label> 
+                <input placeholder="请输入验证码" type="text" name="code" class="yzm">
+                <img class="code" src="" alt=""><span style="margin-left:10px;color:red;vertical-align:18px;">(看不清,点击刷新下,验证码不区分大小写!)</span>
+                <input type="hidden" value="" id="verify"/>
+            </div>
+            
+            <div class="submit">注册</div>
+        </form>
+    </div>
+
+    <script>
+
+    initVerify();
+        function initVerify(){
+            $.ajax({
+            url: "/captchas",
+            type: "GET",
+            cache: false,
+            success: function (msg) {
+                // console.log(msg.code);
+                $("#verify").val(msg.code.toLowerCase());
+                $(".code").attr({src:msg.img})
+            }
+            })
+
+        }
+
+        $(".code").on('click',function(){
+            initVerify();
+        })
+       
+        $('#avator').change(function(){
+            if (this.files.length != 0) {
+                var file = this.files[0],
+                    reader = new FileReader();
+                if (!reader) {
+                    this.value = '';
+                    return;
+                };
+                console.log(file.size,file.type)
+            
+                if (!/image/g.test(file.type)) {
+                    fade("请上传图片文件!")
+                    $('#avatorVal').val('')
+                    $('form .preview').attr('src', '')
+                    $('form .preview').fadeOut()
+                    return 
+                }
+                reader.onload = function (e) {
+                    this.value = '';
+                    $('form .preview').attr('src', e.target.result)
+                    $('form .preview').fadeIn()
+                     var image = new Image();
+                     image.onload = function(){
+                         var canvas = document.createElement('canvas');
+                         var ctx = canvas.getContext("2d");
+                         canvas.width = 100;
+                         canvas.height = 100;
+                         ctx.clearRect(0, 0, 100, 100);
+                         ctx.drawImage(image, 0, 0, 100, 100);
+                         var blob = canvas.toDataURL("image/png");
+                         $('#avatorVal').val(blob)
+                     }
+                     image.src = e.target.result
+                     
+                };
+                reader.readAsDataURL(file);
+            };
+        })
+        $('.submit').click(function(){
+            // console.log($('.form').serialize())
+            if ($('input[name=name]').val().trim() == '') {
+                fade('请输入用户名！')
+            }else if($('input[name=name]').val()=='') {
+                fade('请输入邮箱!')
+            } else if($('input[name=name]').val().match(/[<'">]/g)){
+                fade('请输入合法字符！')
+            }else if($('#avatorVal').val() == ''){
+                fade('请上传头像！')
+            }else if($('input[name=code]').val().trim()!== $("#verify").val()){
+                console.log($('input[name=code]').val().trim());
+                fade('验证码不正确')
+            }else{
+                $.ajax({
+                    url: "/signup",
+                    data: {
+                        name: $('input[name=name]').val(),
+                        email: $('input[name=email]').val(),
+                        password: $('input[name=password]').val(),
+                        repeatpass: $('input[name=repeatpass]').val(),
+                        avator: $('#avatorVal').val(),
+                    },
+                    type: "POST",
+                    cache: false,
+                    dataType: 'json',
+                    success: function (msg) {
+                       if(msg.code == 200){
+                           
+                           fade('注册成功')
+                           setTimeout(function(){
+                               window.location.href = "/active?regEmail="+$('input[name=email]').val()   
+                           },1000)
+
+                       }else{
+                            fade(msg.message)
+                       }
+                    },
+                    error: function () {
+                        alert('异常');
+                    }
+                })          
+            }
+        })  
+    </script>
+

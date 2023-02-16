@@ -1,53 +1,75 @@
 <%- include("header",{type:'signin'}) %>
-	<div class="container">
-		<form class="form create" method="post ">
-			<div>
-				<label>用户名：</label> 
-				<input placeholder="用户名" type="text" name="name">
-			</div>
-			<div>
-				<label>密码：</label> 
-				<input placeholder="密码" type="password" name="password">
-			</div>
-			<div class="submit">登录</div>
-		</form>		
-	</div>
-	<script>
-		$(window).keyup(function(e){
-			//console.log(e.keyCode)
-			if (e.keyCode == 13) {
-				$('.submit').click()
-			}
-		})
-		$('.submit').click(function(){
-			if ($('input[name=name]').val().trim() == '' || $('input[name=password]').val().trim() == '' ) {
-				fade('请输入用户名或密码')
-			}else{
-				console.log($('.form').serialize())
-				$.ajax({
-					url: "/signin",
-					data: $('.form').serialize(),
-					type: "POST",
-					cache: false,
-					dataType: 'json',
-					success: function (msg) {
-					    if (msg.code != 200) {
-							$('input').val('')
-						    fade('用户名或密码错误')
-					    } else{
-						    fade('登录成功')
-						    setTimeout(function(){
-							    window.location.href = "/posts"
-						    },1500)	               	
-					    }
-					},
-					error: function () {
-						alert('异常');
-					}
-				})			
-			}
-		})		
-	</script>
-<% include footer %>
+    <div class="container">
+        <form class="form create" method="post ">
+            <div>
+                <label>用户名：</label> 
+                <input placeholder="用户名" type="text" name="name">
+            </div>
+            <div>
+                <label>密码：</label> 
+                <input placeholder="密码" type="password" name="password">
+            </div>
 
-	
+            <div>
+                <label>验证码：</label> 
+                <input placeholder="请输入验证码" type="text" name="code" class="yzm">
+                <img class="code" src="" alt=""><span style="margin-left:10px;color:red;vertical-align:18px;">(看不清,点击刷新下,验证码不区分大小写!)</span>
+                <input type="hidden" value="" id="verify"/>
+            </div>
+            <div class="submit">登录</div>
+        </form>     
+    </div>
+
+    <script>
+        initVerify();
+        function initVerify(){
+            $.ajax({
+            url: "/captchas",
+            type: "GET",
+            cache: false,
+            success: function (msg) {
+                // console.log(msg.code);
+                $("#verify").val(msg.code.toLowerCase());
+                $(".code").attr({src:msg.img})
+            }
+            })
+
+        }
+
+        $(".code").on('click',function(){
+            initVerify();
+        })
+
+        $('.submit').click(function(){
+            if ($('input[name=name]').val().trim() == '' || $('input[name=password]').val().trim() == '' ) {
+                fade('请输入用户名或密码')
+            }else if($('input[name=code]').val().trim()!== $("#verify").val()){
+                console.log($('input[name=code]').val().trim());
+                fade('验证码不正确')
+            }
+            else{
+                console.log($('.form').serialize());
+                $.ajax({
+                    url: "/signin",
+                    data: $('.form').serialize(),
+                    type: "POST",
+                    cache: false,
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg.code != 200) {
+                            $('input').val('')
+                            fade('用户名或密码错误,或者账号未激活~')
+                        } else{
+                            fade('登录成功')
+                            setTimeout(function(){
+                                window.location.href = "/posts"
+                            },1500)                 
+                        }
+                    },
+                    error: function () {
+                        alert('异常');
+                    }
+                })          
+            }
+        })      
+    </script>

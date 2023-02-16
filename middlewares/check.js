@@ -1,4 +1,3 @@
-
 module.exports ={
   // 已经登录了
   checkNotLogin: (ctx) => {
